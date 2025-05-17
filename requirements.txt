@@ -14,3 +14,4 @@ reportlab
 pytest 
 pytest-asyncio
 azure-storage-blob
+pydantic[email]

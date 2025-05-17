@@ -1,7 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.exceptions import RequestValidationError
 from app.auth.routes import router as auth_router
 from app.db.mongo import get_client
+from app.auth.utils import handle_validation_error
 
 app = FastAPI(title="Deep Analysis API")
 
@@ -16,6 +18,11 @@ app.add_middleware(
 
 # Include routers
 app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    """Handle validation errors using the utility function"""
+    return await handle_validation_error(request, exc)
 
 @app.on_event("startup")
 async def startup_db_client():

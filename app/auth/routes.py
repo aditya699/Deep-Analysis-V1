@@ -1,19 +1,19 @@
 from datetime import datetime, timedelta
-from fastapi import APIRouter, HTTPException, BackgroundTasks  # Added BackgroundTasks
-from app.auth.schemas import EmailRequest
-from app.db.mongo import get_db
+from fastapi import APIRouter, HTTPException, BackgroundTasks
+from app.auth.schemas import EmailRequest, LoginResponse, User
+from app.db.mongo import get_db, log_error
 from pymongo.database import Database
 from fastapi import Depends
 import random
 import string
-from app.auth.schemas import User
+from app.auth.utils import send_password_email
 
 router = APIRouter()
 
-@router.post("/request-login", response_model=dict)
+@router.post("/request-login", response_model=LoginResponse)
 async def request_login(
     request: EmailRequest, 
-    background_tasks: BackgroundTasks,  # Added background_tasks parameter
+    background_tasks: BackgroundTasks,
     db: Database = Depends(get_db)
 ):
     """
@@ -61,8 +61,21 @@ async def request_login(
             }
             await users_collection.insert_one(new_user)
 
+        # Add the email sending task directly to background_tasks
+        background_tasks.add_task(send_password_email, email, password)
         
-        return {"message": "Login instructions sent to your email"}
+        # Return a properly structured response
+        return LoginResponse(
+            message="Login instructions sent to your email",
+            success=True,
+            email=email
+        )
     
     except Exception as e:
+        # Log the error to MongoDB
+        await log_error(
+            error=e,
+            location="request_login",
+            additional_info={"email": request.email}
+        )
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
