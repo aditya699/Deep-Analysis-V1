@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from fastapi import APIRouter, HTTPException, BackgroundTasks
-from app.auth.schemas import EmailRequest, LoginResponse, User
+from app.auth.schemas import EmailRequest, LoginResponse, User, PasswordVerifyRequest
 from app.db.mongo import get_db, log_error
 from pymongo.database import Database
 from fastapi import Depends
@@ -66,7 +66,7 @@ async def request_login(
         
         # Return a properly structured response
         return LoginResponse(
-            message="Login instructions sent to your email",
+            message="Login instructions are being sent to your email",
             success=True,
             email=email
         )
@@ -76,6 +76,57 @@ async def request_login(
         await log_error(
             error=e,
             location="request_login",
+            additional_info={"email": request.email}
+        )
+        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+
+@router.post("/verify-password")
+async def verify_password(
+    request: PasswordVerifyRequest,
+    db: Database = Depends(get_db)
+):
+    """
+    Route to verify user's password.
+    Checks if the provided email and password match and if the password hasn't expired.
+    """
+    try:
+        # Get the users collection
+        users_collection = db["users"]
+        
+        # Find the user by email
+        user = await users_collection.find_one({"email": request.email})
+        
+        if not user:
+            raise HTTPException(
+                status_code=404,
+                detail="User not found"
+            )
+            
+        # Check if password matches
+        if user["password"] != request.password:
+            raise HTTPException(
+                status_code=401,
+                detail="Invalid password"
+            )
+            
+        # Check if password has expired
+        if datetime.utcnow() > user["password_expiry"]:
+            raise HTTPException(
+                status_code=401,
+                detail="Password has expired. Please request a new one."
+            )
+            
+        return {
+            "message": "Password verified successfully",
+            "success": True,
+            "email": request.email
+        }
+        
+    except Exception as e:
+        # Log the error to MongoDB
+        await log_error(
+            error=e,
+            location="verify_password",
             additional_info={"email": request.email}
         )
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")

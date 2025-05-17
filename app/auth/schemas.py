@@ -25,3 +25,7 @@ class LoginResponse(BaseModel):
     message: str
     success: bool
     email: EmailStr
+
+class PasswordVerifyRequest(BaseModel):
+    email: str
+    password: str
