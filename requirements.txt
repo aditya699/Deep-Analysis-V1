@@ -1,0 +1,16 @@
+openai-agents
+python-dotenv
+fastapi
+uvicorn
+pandas
+numpy
+python-multipart
+pymongo>=4.13.0
+pydantic-settings
+streamlit
+matplotlib
+seaborn
+reportlab
+pytest 
+pytest-asyncio
+azure-storage-blob
