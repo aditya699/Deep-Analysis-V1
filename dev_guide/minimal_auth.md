@@ -188,3 +188,6 @@ sequenceDiagram
     API-->>Frontend: Result / Report link
 ```
 
+
+🧠 What’s a Cookie?
+A cookie is a small piece of data the browser stores and attaches automatically to your requests to a specific backend.

@@ -5,6 +5,9 @@ from app.core.config import settings
 from app.db.mongo import log_error
 from fastapi import Request, HTTPException
 from fastapi.exceptions import RequestValidationError
+from jose import jwt 
+from datetime import datetime, timedelta
+from app.core.config import settings
 
 async def handle_validation_error(request: Request, exc: RequestValidationError):
     """Handle validation errors and log them to MongoDB"""
@@ -76,3 +79,31 @@ async def send_password_email(email: str, password: str) -> bool:
         )
         print(f"Failed to send password email to {email}: {str(e)}")
         return False
+
+async def create_access_token(data: dict)->str:
+    """
+    Create an JWT access token which expires in 1 hour
+    
+    Args:
+        data: The data to encode in the token
+    """
+    to_encode = data.copy()
+    expire = datetime.utcnow() + timedelta(seconds=settings.JWT_EXPIRY_SECONDS)
+    to_encode.update({"exp": expire})
+
+    encoded_jwt = jwt.encode(to_encode, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
+    return encoded_jwt
+
+async def create_refresh_token(data: dict)->str:
+    """
+    Create a JWT refresh token which expires in 3 days
+    """
+    to_encode = data.copy()
+    expire = datetime.utcnow() + timedelta(seconds=settings.REFRESH_TOKEN_EXPIRY_SECONDS)
+    to_encode.update({"exp": expire})
+
+    encoded_jwt = jwt.encode(to_encode, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
+    return encoded_jwt
+
+
+

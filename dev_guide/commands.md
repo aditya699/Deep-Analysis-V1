@@ -7,5 +7,10 @@
 # Run app
 1. uvicorn app.main:app --reload
 
+# Match the requirements.txt file with the current packages
+1. uv pip compile requirements.txt -o uv.lock
+
+
+
 
 

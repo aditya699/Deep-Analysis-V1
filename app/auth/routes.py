@@ -1,12 +1,13 @@
 from datetime import datetime, timedelta
-from fastapi import APIRouter, HTTPException, BackgroundTasks
+from fastapi import APIRouter, HTTPException, BackgroundTasks, Depends, Response, Request
 from app.auth.schemas import EmailRequest, LoginResponse, User, PasswordVerifyRequest
 from app.db.mongo import get_db, log_error
 from pymongo.database import Database
-from fastapi import Depends
 import random
 import string
-from app.auth.utils import send_password_email
+from app.auth.utils import send_password_email, create_access_token, create_refresh_token
+from app.core.config import settings
+from jose import JWTError, jwt
 
 router = APIRouter()
 
@@ -83,50 +84,92 @@ async def request_login(
 @router.post("/verify-password")
 async def verify_password(
     request: PasswordVerifyRequest,
+    response: Response,
     db: Database = Depends(get_db)
 ):
-    """
-    Route to verify user's password.
-    Checks if the provided email and password match and if the password hasn't expired.
-    """
     try:
-        # Get the users collection
         users_collection = db["users"]
-        
-        # Find the user by email
         user = await users_collection.find_one({"email": request.email})
-        
+
         if not user:
-            raise HTTPException(
-                status_code=404,
-                detail="User not found"
-            )
-            
-        # Check if password matches
+            raise HTTPException(status_code=404, detail="User not found")
+
         if user["password"] != request.password:
-            raise HTTPException(
-                status_code=401,
-                detail="Invalid password"
-            )
-            
-        # Check if password has expired
+            raise HTTPException(status_code=401, detail="Invalid password")
+
         if datetime.utcnow() > user["password_expiry"]:
-            raise HTTPException(
-                status_code=401,
-                detail="Password has expired. Please request a new one."
-            )
-            
+            raise HTTPException(status_code=401, detail="Password has expired. Please request a new one.")
+
+        #Generate tokens
+        access_token = await create_access_token({"email": user["email"]})
+        refresh_token = await create_refresh_token({"email": user["email"]})
+
+        #Set refresh token in secure HttpOnly cookie (This is a secure cookie that cannot be accessed by JavaScript)
+        response.set_cookie(
+            key="refresh_token",
+            value=refresh_token,
+            httponly=True,
+            secure=True,
+            samesite="strict",
+            max_age=settings.REFRESH_TOKEN_EXPIRY_SECONDS,
+            path="/refresh-token"
+        )
+
+        #Return the access token in response
         return {
             "message": "Password verified successfully",
             "success": True,
-            "email": request.email
+            "email": request.email,
+            "access_token": access_token
         }
-        
+
     except Exception as e:
-        # Log the error to MongoDB
-        await log_error(
-            error=e,
-            location="verify_password",
-            additional_info={"email": request.email}
-        )
+        await log_error(error=e, location="verify_password", additional_info={"email": request.email})
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+    
+@router.post("/refresh-token")
+async def refresh_token(request: Request, response: Response):
+    try:
+        # Get refresh token from cookie
+        refresh_token = request.cookies.get("refresh_token")
+        if not refresh_token:
+            raise HTTPException(status_code=401, detail="Refresh token missing")
+
+         #This helps us to verify the refresh token is signed by the JWT_SECRET_KEY and the algorithm is the one we are using
+        payload = jwt.decode(   
+            refresh_token, 
+            settings.JWT_SECRET_KEY,
+            algorithms=[settings.JWT_ALGORITHM]
+        )
+
+        email = payload.get("email")
+        if not email:
+            raise HTTPException(status_code=401, detail="Invalid refresh token")
+
+        # Create new tokens
+        new_access_token = await create_access_token({"email": email})
+        new_refresh_token = await create_refresh_token({"email": email})  # Rotate if you want
+
+        # Set new refresh token cookie
+        response.set_cookie(
+            key="refresh_token",
+            value=new_refresh_token,
+            httponly=True,
+            secure=True,
+            samesite="strict",
+            max_age=settings.REFRESH_TOKEN_EXPIRY_SECONDS,
+            path="/refresh-token"
+        )
+
+        # Return new access token
+        return {
+            "access_token": new_access_token,
+            "success": True,
+            "message": "Token refreshed successfully"
+        }
+
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid or expired refresh token")
+    except Exception as e:
+        await log_error(error=e, location="refresh_token", additional_info={})
+        raise HTTPException(status_code=500, detail="An error occurred")
