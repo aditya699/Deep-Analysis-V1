@@ -5,10 +5,12 @@ from app.core.config import settings
 from app.db.mongo import log_error
 from fastapi import Request, HTTPException
 from fastapi.exceptions import RequestValidationError
-from jose import jwt 
+from jose import JWTError, jwt 
 from datetime import datetime, timedelta
-from app.core.config import settings
-
+from fastapi import Depends, status
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from app.db.mongo import get_db
+from pymongo.database import Database
 async def handle_validation_error(request: Request, exc: RequestValidationError):
     """Handle validation errors and log them to MongoDB"""
     await log_error(
@@ -105,5 +107,77 @@ async def create_refresh_token(data: dict)->str:
     encoded_jwt = jwt.encode(to_encode, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
     return encoded_jwt
 
+
+# Create HTTPBearer instance for extracting Bearer tokens
+security = HTTPBearer()
+
+async def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Database = Depends(get_db)
+) -> dict:
+    """
+    Extract and validate JWT access token from Authorization header.
+    Returns the current user data if token is valid.
+    
+    Args:
+        credentials: Bearer token from Authorization header
+        db: MongoDB database connection
+        
+    Returns:
+        dict: User data from database
+        
+    Raises:
+        HTTPException: If token is invalid, expired, or user not found
+    """
+    try:
+        # Extract the token from credentials
+        token = credentials.credentials
+        
+        # Decode and verify the JWT token
+        payload = jwt.decode(
+            token,
+            settings.JWT_SECRET_KEY,
+            algorithms=[settings.JWT_ALGORITHM]
+        )
+        
+        # Extract email from token payload
+        email: str = payload.get("email")
+        if email is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid authentication credentials",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+            
+        # Find user in database
+        users_collection = db["users"]
+        user = await users_collection.find_one({"email": email})
+        
+        if user is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="User not found",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+            
+        return user
+        
+    except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    except Exception as e:
+        # Log the error
+        await log_error(
+            error=e,
+            location="get_current_user",
+            additional_info={"token_provided": bool(credentials)}
+        )
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Authentication error occurred"
+        )
 
 

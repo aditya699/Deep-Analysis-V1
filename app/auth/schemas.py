@@ -29,3 +29,4 @@ class LoginResponse(BaseModel):
 class PasswordVerifyRequest(BaseModel):
     email: str
     password: str
+    

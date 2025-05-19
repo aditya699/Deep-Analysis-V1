@@ -4,7 +4,7 @@ from fastapi.exceptions import RequestValidationError
 from app.auth.routes import router as auth_router
 from app.db.mongo import get_client
 from app.auth.utils import handle_validation_error
-
+from app.chat.routes import router as chat_router
 app = FastAPI(title="Deep Analysis API")
 
 # Configure CORS
@@ -18,6 +18,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
+app.include_router(chat_router, prefix="/chat", tags=["Chat"])
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
