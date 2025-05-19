@@ -46,13 +46,13 @@ async def upload_csv(
     # Store the original file content for blob upload
     original_file_content = file_content
     
-    # 3. Read and validate CSV content
+    # 3. Read and validate CSV content (memory optimized)
     try:
         # Convert bytes to string
         csv_string = file_content.decode('utf-8')
         
-        # Read CSV into pandas DataFrame
-        df = pd.read_csv(StringIO(csv_string))
+        # Read only first 5 rows for preview
+        df = pd.read_csv(StringIO(csv_string), nrows=5)
         
         # Basic validation
         if df.empty:
@@ -66,6 +66,31 @@ async def upload_csv(
                 status_code=400,
                 detail="CSV file has no columns"
             )
+        
+        # Extract metadata from the sample
+        total_columns = len(df.columns)
+        column_names = df.columns.tolist()
+        
+        # Create preview data
+        preview_data = []
+        for index, row in df.iterrows():
+            row_dict = {}
+            for column in df.columns:
+                # Handle NaN values and convert to appropriate types
+                value = row[column]
+                if pd.isna(value):
+                    row_dict[column] = None
+                elif isinstance(value, (int, float)):
+                    # Keep numeric values as-is, but convert numpy types to Python types
+                    row_dict[column] = value.item() if hasattr(value, 'item') else value
+                else:
+                    # Convert everything else to string
+                    row_dict[column] = str(value)
+            preview_data.append(row_dict)
+        
+        # Clean up immediately
+        del df
+        del csv_string
             
     except UnicodeDecodeError as e:
         await log_error(
@@ -101,39 +126,18 @@ async def upload_csv(
     # 4. Generate session ID
     session_id = str(uuid.uuid4())
     
-    # 5. Create preview data (first 5 rows)
-    preview_rows = 5
-    preview_data = []
-    
-    # Convert DataFrame to list of dictionaries for JSON response
-    for index, row in df.head(preview_rows).iterrows():
-        row_dict = {}
-        for column in df.columns:
-            # Handle NaN values and convert to appropriate types
-            value = row[column]
-            if pd.isna(value):
-                row_dict[column] = None
-            elif isinstance(value, (int, float)):
-                # Keep numeric values as-is, but convert numpy types to Python types
-                row_dict[column] = value.item() if hasattr(value, 'item') else value
-            else:
-                # Convert everything else to string
-                row_dict[column] = str(value)
-        preview_data.append(row_dict)
-    
-    # 6. Prepare file metadata
+    # 5. Prepare file metadata (without total_rows)
     file_metadata = {
         "session_id": session_id,
         "original_filename": file.filename,
         "file_size": len(file_content),
-        "total_rows": len(df),
-        "total_columns": len(df.columns),
-        "column_names": df.columns.tolist(),
+        "total_columns": total_columns,
+        "column_names": column_names,
         "upload_timestamp": datetime.utcnow(),
         "user_email": current_user["email"]
     }
     
-    # 7. Upload file to Azure Blob Storage
+    # 6. Upload file to Azure Blob Storage
     try:
         # Initialize Azure Blob Service Client
         blob_service_client = BlobServiceClient.from_connection_string(
@@ -207,9 +211,9 @@ async def upload_csv(
             detail="Failed to upload file to storage"
         )
     
-    # 8. Save session data to MongoDB
+    # 7. Save session data to MongoDB
     try:
-        # Prepare session document for MongoDB
+        # Prepare session document for MongoDB (without total_rows)
         session_document = {
             "session_id": session_id,
             "user_email": current_user["email"],
@@ -227,7 +231,6 @@ async def upload_csv(
             
             # CSV structure information
             "csv_info": {
-                "total_rows": file_metadata["total_rows"],
                 "total_columns": file_metadata["total_columns"],
                 "column_names": file_metadata["column_names"],
                 "preview_data": preview_data
@@ -274,16 +277,15 @@ async def upload_csv(
             detail="Failed to create session in database"
         )
     
-    # 9. Return the final API response
+    # 8. Return the final API response
     try:
-        # Construct the success response
+        # Construct the success response (without total_rows)
         response_data = {
             "session_id": session_id,
             "file_url": file_url,
             "file_name": file.filename,
             "preview_data": preview_data,
             "file_info": {
-                "total_rows": file_metadata["total_rows"],
                 "total_columns": file_metadata["total_columns"],
                 "file_size": file_metadata["file_size"],
                 "column_names": file_metadata["column_names"]
