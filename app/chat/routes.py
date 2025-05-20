@@ -33,8 +33,8 @@ async def upload_csv(
             detail="Only CSV files are allowed"
         )
     
-    # 2. Validate file size (max 50MB)
-    max_size = 50 * 1024 * 1024  # 50MB in bytes
+    # 2. Validate file size (max 30MB)
+    max_size = 30 * 1024 * 1024  # 30MB in bytes
     file_content = await file.read()
     
     if len(file_content) > max_size:
@@ -52,6 +52,7 @@ async def upload_csv(
         csv_string = file_content.decode('utf-8')
         
         # Read only first 5 rows for preview
+        # NOTE :This will read 5 rows if 5 rows are present, if less than 5 rows are present then it will read all the rows
         df = pd.read_csv(StringIO(csv_string), nrows=5)
         
         # Basic validation
@@ -218,7 +219,6 @@ async def upload_csv(
             "session_id": session_id,
             "user_email": current_user["email"],
             "user_id": str(current_user["_id"]),  # Convert ObjectId to string
-            
             # File information
             "file_info": {
                 "original_filename": file.filename,
