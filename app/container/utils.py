@@ -7,6 +7,10 @@ from app.db.mongo import log_error
 from app.container.schemas import Container
 from datetime import datetime
 from app.db.mongo import get_db
+import requests
+import os
+from app.core.config import settings
+import uuid
 
 async def create_new_container():
     """
@@ -14,7 +18,9 @@ async def create_new_container():
     """
     try:
         client = await get_openai_client()
-        container = client.containers.create()
+        # Generate a unique name for the container
+        container_name = f"container-{uuid.uuid4().hex[:8]}"
+        container = client.containers.create(name=container_name)
         container_id = container.id
         return container_id
     except Exception as e:
@@ -69,8 +75,41 @@ async def get_all_active_containers():
         print(f"Error type: {type(e)}")
         await log_error(e, "container/utils.py", "get_all_active_containers")
         raise e
+ 
+# NOTE:This function is work in progress(quite suboptimal atleast for now)
+async def upload_file_to_container(container_id: str, file_url: str):
+     """
+     This function will be used to upload the file to the container
+     Args:
+         container_id (str): The ID of the container to upload to
+         file_url (str): The blob URL of the file to upload
+     Returns:
+         str: The path of the uploaded file in the container
+     """
+     try:
+         # Download the file from blob URL
+         response = requests.get(file_url)
+         response.raise_for_status()
+         
+         # Get filename from URL
+         filename = file_url.split('/')[-1]
+         
+         # Upload to OpenAI container
+         url = f"https://api.openai.com/v1/containers/{container_id}/files"
+         headers = {"Authorization": f"Bearer {settings.OPENAI_API_KEY}"}
+         files = {'file': (filename, response.content)}
+         
+         upload_response = requests.post(url, headers=headers, files=files)
+         upload_response.raise_for_status()
+         
+         file_path = upload_response.json()['path']
+         return file_path
+         
+     except Exception as e:
+         await log_error(e, "container/utils.py", "upload_file_to_container")
+         raise e
 
-#NOTE: This is just a testing code
+#NOTE: This is just testing code
 if __name__ == "__main__":
     # Example usage when running the file directly
     async def main():

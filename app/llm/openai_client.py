@@ -2,9 +2,9 @@
 from openai import OpenAI
 import os
 import requests
-from dotenv import load_dotenv
+from app.core.config import settings
+
 from app.db.mongo import log_error
-load_dotenv()
 
 # Initialize client (note: This will be initialized once and reused)
 client: OpenAI | None = None
@@ -17,7 +17,7 @@ async def get_openai_client():
     global client
     try:
         if client is None:
-            client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+            client = OpenAI(api_key=settings.OPENAI_API_KEY)
         return client
     
     except Exception as e:

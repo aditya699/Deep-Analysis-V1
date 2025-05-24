@@ -10,7 +10,7 @@
 # Match the requirements.txt file with the current packages
 1. uv pip compile requirements.txt -o uv.lock
 
-
-
+# Commands to run the openai container
+1. python -m app.container.utils
 
 
