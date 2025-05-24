@@ -6,6 +6,7 @@ from app.db.mongo import get_client
 from app.auth.utils import handle_validation_error
 from app.chat.routes import router as chat_router
 from app.sessions.routes import router as sessions_router
+from app.llm.openai_client import client as openai_client
 app = FastAPI(title="Deep Analysis API")
 
 # Configure CORS
@@ -37,6 +38,10 @@ async def shutdown_db_client():
     from app.db.mongo import client
     if client:
         client.close()
+    
+    # Reset the OpenAI client
+    global openai_client
+    openai_client = None
 
 @app.get("/")
 async def root():

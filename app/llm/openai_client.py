@@ -1,0 +1,27 @@
+# Import Library
+from openai import OpenAI
+import os
+import requests
+from dotenv import load_dotenv
+from app.db.mongo import log_error
+load_dotenv()
+
+# Initialize client (note: This will be initialized once and reused)
+client: OpenAI | None = None
+
+async def get_openai_client():
+    """
+    Get or initialize the OpenAI client.
+    Returns the existing client if already initialized, otherwise creates a new one.
+    """
+    global client
+    try:
+        if client is None:
+            client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        return client
+    
+    except Exception as e:
+        await log_error(e, "llm/openai_client.py", "get_openai_client")
+        raise e
+    
+    

@@ -123,8 +123,10 @@ numpy==2.2.5
     #   pydeck
     #   seaborn
     #   streamlit
-openai==1.79.0
-    # via openai-agents
+openai==1.82.0
+    # via
+    #   -r requirements.txt
+    #   openai-agents
 openai-agents==0.0.15
     # via -r requirements.txt
 packaging==24.2

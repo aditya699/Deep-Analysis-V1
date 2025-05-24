@@ -286,9 +286,12 @@ async def upload_csv(
             "file_name": file.filename,
             "preview_data": preview_data,
             "file_info": {
-                "total_columns": file_metadata["total_columns"],
+                "original_filename": file.filename,
+                "blob_name": file_metadata["blob_name"],
+                "container_name": file_metadata["container_name"],
+                "file_url": file_url,
                 "file_size": file_metadata["file_size"],
-                "column_names": file_metadata["column_names"]
+                "content_type": "text/csv"
             },
             "message": "CSV file uploaded successfully",
             "success": True
