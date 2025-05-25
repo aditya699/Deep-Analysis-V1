@@ -12,10 +12,11 @@ from azure.storage.blob import BlobServiceClient
 from app.core.config import settings
 from app.db.mongo import log_error
 from app.chat.schemas import UploadCSVResponse
-from app.container.utils import get_all_active_containers
+from app.container.utils import get_all_active_containers, upload_file_to_container
 import base64
 from azure.storage.blob import BlobBlock
-
+from app.llm.openai_client import get_openai_client
+from openai import OpenAI
 router = APIRouter()
 
 # BUG:  file_content = await file.read()(This operation can choke the server if multiple requests are made simultaneously we need to chunk it)
@@ -259,7 +260,8 @@ async def chat_response(
     user_query: str,
     current_user: dict = Depends(get_current_user),
     db: Database = Depends(get_db),
-    container_id: str = Depends(get_all_active_containers)
+    container_id: str = Depends(get_all_active_containers),
+    openai_client: OpenAI = Depends(get_openai_client)
 ):
     """
     This endpoint is used to get the chat response for the user query
@@ -273,9 +275,39 @@ async def chat_response(
         #From the session get the file_url
         file_url = session["file_info"]["file_url"]
 
-        #Post file_url upload the file to the container
-        pass
+        #From the session get csv_info
+        csv_info = session["csv_info"]
+
+        #push the file to the container
+        file_url = await upload_file_to_container(container_id, file_url)
+
+        #
+        prompt = f"""
+        You are a helpful assistant that can answer questions about the uploaded CSV file.
+        The file is located here: {file_url}    
+        The file has the following columns: {csv_info["column_names"]}
+        The file has the following preview data: {csv_info["preview_data"]}
+
+        The user query is: {user_query}
+        """
+
+        # Step 3: Analyze with code interpreter
+        response = openai_client.responses.create(
+            model="gpt-4.1-mini",
+            tools=[{"type": "code_interpreter", "container": container_id}],
+            tool_choice="required",
+            input=prompt
+        )
+
+        output_response={
+            "response": response.output_text,
+            "code": response.output[0].code,
+        }
+
+        return output_response
+
     except Exception as e:
-        pass
+        log_error(e, "chat/routes.py", "chat_response")
+        raise HTTPException(status_code=500, detail="Error during chat response")
 
 

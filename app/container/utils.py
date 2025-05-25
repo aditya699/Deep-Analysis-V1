@@ -11,6 +11,9 @@ import requests
 import os
 from app.core.config import settings
 import uuid
+import aiohttp
+import aiofiles
+import tempfile
 
 async def create_new_container():
     """
@@ -76,39 +79,52 @@ async def get_all_active_containers():
         await log_error(e, "container/utils.py", "get_all_active_containers")
         raise e
  
-# NOTE:This function is work in progress(quite suboptimal atleast for now)
-async def upload_file_to_container(container_id: str, file_url: str):
-     """
-     This function will be used to upload the file to the container
-     Args:
-         container_id (str): The ID of the container to upload to
-         file_url (str): The blob URL of the file to upload
-     Returns:
-         str: The path of the uploaded file in the container
-     """
-     try:
-         # Download the file from blob URL
-         response = requests.get(file_url)
-         response.raise_for_status()
-         
-         # Get filename from URL
-         filename = file_url.split('/')[-1]
-         
-         # Upload to OpenAI container
-         url = f"https://api.openai.com/v1/containers/{container_id}/files"
-         headers = {"Authorization": f"Bearer {settings.OPENAI_API_KEY}"}
-         files = {'file': (filename, response.content)}
-         
-         upload_response = requests.post(url, headers=headers, files=files)
-         upload_response.raise_for_status()
-         
-         file_path = upload_response.json()['path']
-         return file_path
-         
-     except Exception as e:
-         await log_error(e, "container/utils.py", "upload_file_to_container")
-         raise e
-
+async def upload_file_to_container(container_id: str, file_url: str) -> str:
+    """
+    Upload file to OpenAI container with streaming (8KB memory max)
+    
+    Args:
+        container_id: OpenAI container ID  
+        file_url: Azure blob URL
+        
+    Returns:
+        str: File path in container
+    """
+    temp_file_path = None
+    
+    try:
+        # Create temp file
+        temp_fd, temp_file_path = tempfile.mkstemp(suffix='.csv')
+        os.close(temp_fd)
+        
+        # Stream Azure → Disk
+        async with aiohttp.ClientSession() as session:
+            async with session.get(file_url) as response:
+                response.raise_for_status()
+                async with aiofiles.open(temp_file_path, 'wb') as temp_file:
+                    async for chunk in response.content.iter_chunked(8192):
+                        await temp_file.write(chunk)
+        
+        # Stream Disk → OpenAI  
+        filename = file_url.split('/')[-1]
+        headers = {"Authorization": f"Bearer {os.getenv('OPENAI_API_KEY')}"}
+        url = f"https://api.openai.com/v1/containers/{container_id}/files"
+        
+        async with aiohttp.ClientSession() as session:
+            async with aiofiles.open(temp_file_path, 'rb') as fp:
+                form = aiohttp.FormData()
+                form.add_field("file", fp, filename=filename)
+                
+                async with session.post(url, headers=headers, data=form) as response:
+                    response.raise_for_status()
+                    result = await response.json()
+                    return result['path']
+    
+    finally:
+        # Cleanup
+        if temp_file_path and os.path.exists(temp_file_path):
+            os.unlink(temp_file_path)
+    
 #NOTE: This is just testing code
 if __name__ == "__main__":
     # Example usage when running the file directly

@@ -18,3 +18,5 @@ pydantic[email]
 pyjwt
 python-jose
 openai==1.82.0
+aiohttp
+aiofiles
