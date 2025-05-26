@@ -46,3 +46,9 @@ class ChatMessage(BaseModel):
     content_type: str  #This will be used what different types of content are there(text,image,table)
     metadata: Dict[str, Any]  #Additional information about the message(Here we need to add any image url's and code blocks)
     
+class ChatResponse(BaseModel):
+    """Chat response model"""
+    response: str
+    code: str
+    code_explanation: str
+

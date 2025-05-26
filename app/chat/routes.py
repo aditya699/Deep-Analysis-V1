@@ -11,7 +11,7 @@ from azure.core.exceptions import AzureError
 from azure.storage.blob import BlobServiceClient
 from app.core.config import settings
 from app.db.mongo import log_error
-from app.chat.schemas import UploadCSVResponse
+from app.chat.schemas import UploadCSVResponse, ChatResponse
 from app.container.utils import get_all_active_containers, upload_file_to_container
 import base64
 from azure.storage.blob import BlobBlock
@@ -272,6 +272,16 @@ async def chat_response(
         if not session:
             raise HTTPException(status_code=404, detail="Session not found")
         
+        #Insert the user query into the database
+        await db["messages"].insert_one({
+            "session_id": session_id,
+            "role": "user",
+            "content": user_query,
+            "created_at": datetime.utcnow(),
+            "content_type": "text",
+            "metadata": {}
+        })
+        
         #From the session get the file_url
         file_url = session["file_info"]["file_url"]
 
@@ -281,12 +291,27 @@ async def chat_response(
         #push the file to the container
         file_url = await upload_file_to_container(container_id, file_url)
 
-        #
+        # Get message history for this session
+        message_history = await db["messages"].find(
+            {"session_id": session_id}
+        ).sort("created_at", 1).to_list(length=None)
+
+        # Format message history for the prompt
+        conversation_history = ""
+        for msg in message_history:
+            role = msg["role"]
+            content = msg["content"]
+            conversation_history += f"{role}: {content}\n"
+
+        #Create the prompt
         prompt = f"""
         You are a helpful assistant that can answer questions about the uploaded CSV file.
         The file is located here: {file_url}    
         The file has the following columns: {csv_info["column_names"]}
         The file has the following preview data: {csv_info["preview_data"]}
+
+        Previous conversation history:
+        {conversation_history}
 
         The user query is: {user_query}
         """
@@ -298,16 +323,35 @@ async def chat_response(
             tool_choice="required",
             input=prompt
         )
+        print(response)
 
+        #Step 4: Explain what the code is doing for observability
+        code_explain=openai_client.responses.create(
+            model="gpt-4.1-mini",
+            input=f"Explain what the following code is doing so that the business user can understand it. Format your explanation as a numbered list where each step starts with 'This code does:' followed by the action. For example: '1. This code does: Loads the data from the CSV file' : {response.output[0].code}",
+            instructions="You are a helpful assistant that can explain code to business users. You should explain the code in a way that is easy to understand."
+        )
+        
         output_response={
             "response": response.output_text,
             "code": response.output[0].code,
+            "code_explanation": code_explain.output_text
         }
+
+        #Insert the assistant response into the database
+        await db["messages"].insert_one({
+            "session_id": session_id,
+            "role": "assistant",
+            "content": response.output_text,
+            "created_at": datetime.utcnow(),
+            "content_type": "text",
+            "metadata": {"code": response.output[0].code, "code_explanation": code_explain.output_text}
+        })
 
         return output_response
 
     except Exception as e:
-        log_error(e, "chat/routes.py", "chat_response")
+        await log_error(e, "chat/routes.py", "chat_response")
         raise HTTPException(status_code=500, detail="Error during chat response")
 
 
