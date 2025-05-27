@@ -8,7 +8,7 @@ import pandas as pd
 from io import StringIO
 from datetime import datetime
 from azure.core.exceptions import AzureError
-from azure.storage.blob import BlobServiceClient
+from azure.storage.blob.aio import BlobServiceClient
 from app.core.config import settings
 from app.db.mongo import log_error
 from app.chat.schemas import UploadCSVResponse, ChatResponse
@@ -17,15 +17,16 @@ import base64
 from azure.storage.blob import BlobBlock
 from app.llm.openai_client import get_openai_client
 from openai import OpenAI
+from app.db.blob import get_blob_client
+from app.chat.utils import download_file_from_container
 router = APIRouter()
-
-# BUG:  file_content = await file.read()(This operation can choke the server if multiple requests are made simultaneously we need to chunk it)
 
 @router.post("/upload_csv", response_model=UploadCSVResponse)
 async def upload_csv_true_streaming(
     file: UploadFile = File(...),
     current_user: dict = Depends(get_current_user),
-    db: Database = Depends(get_db)
+    db: Database = Depends(get_db),
+    blob_client: BlobServiceClient = Depends(get_blob_client)
 ):
     """
     TRUE STREAMING: Never store the full file in memory!
@@ -51,14 +52,13 @@ async def upload_csv_true_streaming(
     
     # Azure setup
     session_id = str(uuid.uuid4())
-    blob_service_client = BlobServiceClient.from_connection_string(settings.BLOB_STORAGE_ACCOUNT_KEY)
+    blob_service_client = blob_client
     container_name = "images-analysis"
     timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
     blob_name = f"{session_id}_{timestamp}_{file.filename}"
-    blob_client = blob_service_client.get_container_client(container_name).get_blob_client(blob_name)
+    blob_client_container = blob_service_client.get_container_client(container_name).get_blob_client(blob_name)
     
     # Azure block upload setup
-    
     block_list = []
     current_block_data = bytearray()
     block_counter = 0
@@ -68,7 +68,7 @@ async def upload_csv_true_streaming(
     try:
         # Create container if needed
         try:
-            blob_service_client.get_container_client(container_name).create_container()
+            await blob_service_client.get_container_client(container_name).create_container()
         except:
             pass
         
@@ -135,7 +135,7 @@ async def upload_csv_true_streaming(
                 
                 print(f"📤 Uploading Azure block {block_counter + 1}: {len(current_block_data)} bytes")
                 
-                blob_client.stage_block(
+                await blob_client_container.stage_block(
                     block_id=block_id,
                     data=bytes(current_block_data)
                 )
@@ -154,7 +154,7 @@ async def upload_csv_true_streaming(
             
             print(f"📤 Uploading final Azure block: {len(current_block_data)} bytes")
             
-            blob_client.stage_block(
+            await blob_client_container.stage_block(
                 block_id=block_id,
                 data=bytes(current_block_data)
             )
@@ -165,12 +165,12 @@ async def upload_csv_true_streaming(
         # Commit all blocks to create final blob
         print(f"🔗 Committing {len(block_list)} blocks to create final blob...")
         
-        blob_client.commit_block_list(
+        await blob_client_container.commit_block_list(
             block_list=block_list,
             content_type="text/csv"
         )
         
-        file_url = blob_client.url
+        file_url = blob_client_container.url
         
         print(f"✅ TRUE STREAMING COMPLETE!")
         print(f"📊 Total file size: {total_size} bytes")
@@ -223,7 +223,7 @@ async def upload_csv_true_streaming(
     except Exception as e:
         # Clean up blob if database fails
         try:
-            blob_client.delete_blob()
+            await blob_client_container.delete_blob()
             print(f"🗑️ Cleaned up blob after database error")
         except:
             pass
@@ -261,7 +261,8 @@ async def chat_response(
     current_user: dict = Depends(get_current_user),
     db: Database = Depends(get_db),
     container_id: str = Depends(get_all_active_containers),
-    openai_client: OpenAI = Depends(get_openai_client)
+    openai_client: OpenAI = Depends(get_openai_client),
+    blob_client: BlobServiceClient = Depends(get_blob_client)
 ):
     """
     This endpoint is used to get the chat response for the user query
@@ -325,6 +326,19 @@ async def chat_response(
         )
         print(response)
 
+        # Step 3.5 Handle charts generated
+        for output in response.output:
+                 if hasattr(output, 'content'):
+                    for content in output.content:
+                        if hasattr(content, 'annotations'):
+                            for annotation in content.annotations:
+                                if annotation.type == 'container_file_citation':
+                                    file_id = annotation.file_id
+                                    filename = annotation.filename
+                                    #Download the image file and upload it to the blob container
+                                    print("I Ran")
+                                    file_url = await download_file_from_container(file_id,container_id, blob_client)
+
         #Step 4: Explain what the code is doing for observability
         code_explain=openai_client.responses.create(
             model="gpt-4.1-mini",
@@ -335,7 +349,8 @@ async def chat_response(
         output_response={
             "response": response.output_text,
             "code": response.output[0].code,
-            "code_explanation": code_explain.output_text
+            "code_explanation": code_explain.output_text,
+            "file_url": file_url
         }
 
         #Insert the assistant response into the database
@@ -345,7 +360,7 @@ async def chat_response(
             "content": response.output_text,
             "created_at": datetime.utcnow(),
             "content_type": "text",
-            "metadata": {"code": response.output[0].code, "code_explanation": code_explain.output_text}
+            "metadata": {"code": response.output[0].code, "code_explanation": code_explain.output_text, "file_url": file_url}
         })
 
         return output_response

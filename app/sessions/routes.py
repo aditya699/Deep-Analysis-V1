@@ -8,7 +8,7 @@ import pandas as pd
 from io import StringIO
 from datetime import datetime
 from azure.core.exceptions import AzureError
-from azure.storage.blob import BlobServiceClient
+from azure.storage.blob.aio import BlobServiceClient
 from app.core.config import settings
 from app.db.mongo import log_error
 from app.chat.schemas import UploadCSVResponse
