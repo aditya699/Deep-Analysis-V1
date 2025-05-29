@@ -306,50 +306,66 @@ async def chat_response(
 
         #Create the prompt
         prompt = f"""
-        You are a helpful assistant that can answer questions about the uploaded CSV file.
-        The file is located here: {file_url}    
+        You are a helpful assistant that answers questions about the uploaded CSV file.
+        The file is located here: {file_url}
         The file has the following columns: {csv_info["column_names"]}
-        The file has the following preview data: {csv_info["preview_data"]}
+        Here is a preview of the data: {csv_info["preview_data"]}
 
         Previous conversation history:
         {conversation_history}
 
-        The user query is: {user_query}
+        Please answer the following user question. Respond directly if you can, and only use Python code or the code interpreter tool if it is necessary to answer the question accurately.
+
+        Current User question: {user_query}
         """
 
         # Step 3: Analyze with code interpreter
         response = openai_client.responses.create(
             model="gpt-4.1-mini",
             tools=[{"type": "code_interpreter", "container": container_id}],
-            tool_choice="required",
+            tool_choice="auto",
             input=prompt
         )
         print(response)
 
-        # Step 3.5 Handle charts generated
-        for output in response.output:
-                 if hasattr(output, 'content'):
-                    for content in output.content:
-                        if hasattr(content, 'annotations'):
-                            for annotation in content.annotations:
-                                if annotation.type == 'container_file_citation':
-                                    file_id = annotation.file_id
-                                    filename = annotation.filename
-                                    #Download the image file and upload it to the blob container
-                                    print("I Ran")
-                                    file_url = await download_file_from_container(file_id,container_id, blob_client)
+        # Initialize variables
+        code_explain = None
+        file_url = None
+        code_content = None
 
-        #Step 4: Explain what the code is doing for observability
-        code_explain=openai_client.responses.create(
-            model="gpt-4.1-mini",
-            input=f"Explain what the following code is doing so that the business user can understand it. Format your explanation as a numbered list where each step starts with 'This code does:' followed by the action. For example: '1. This code does: Loads the data from the CSV file' : {response.output[0].code}",
-            instructions="You are a helpful assistant that can explain code to business users. You should explain the code in a way that is easy to understand."
-        )
+        # Step 3.5 Handle charts generated and extract code
+        for output in response.output:
+            # Extract code if available
+            if hasattr(output, 'code') and output.code:
+                code_content = output.code
+            
+            if hasattr(output, 'content'):
+                for content in output.content:
+                    if hasattr(content, 'annotations'):
+                        for annotation in content.annotations:
+                            if annotation.type == 'container_file_citation':
+                                file_id = annotation.file_id
+                                filename = annotation.filename
+                                #Download the image file and upload it to the blob container
+                                print("I Ran")
+                                file_url = await download_file_from_container(file_id,container_id, blob_client)
+
+                                #Step 4: Explain what the code is doing for observability
+                                code_explain=openai_client.responses.create(
+                                    model="gpt-4.1-mini",
+                                    input=f"Explain what the following code is doing so that the business user can understand it. Format your explanation as a numbered list where each step starts with 'This code does:' followed by the action. For example: '1. This code does: Loads the data from the CSV file' : {code_content if code_content else None}.If no code is present, just say 'No code was generated'",
+                                    instructions="You are a helpful assistant that can explain code to business users. You should explain the code in a way that is easy to understand."
+                                )
         
+        if code_explain is None:
+            code_explain_text = None
+        else:
+            code_explain_text = code_explain.output_text
+
         output_response={
             "response": response.output_text,
-            "code": response.output[0].code,
-            "code_explanation": code_explain.output_text,
+            "code": code_content,
+            "code_explanation": code_explain_text,
             "file_url": file_url
         }
 
@@ -360,7 +376,7 @@ async def chat_response(
             "content": response.output_text,
             "created_at": datetime.utcnow(),
             "content_type": "text",
-            "metadata": {"code": response.output[0].code, "code_explanation": code_explain.output_text, "file_url": file_url}
+            "metadata": {"code": code_content, "code_explanation": code_explain_text, "file_url": file_url}
         })
 
         return output_response
@@ -368,5 +384,3 @@ async def chat_response(
     except Exception as e:
         await log_error(e, "chat/routes.py", "chat_response")
         raise HTTPException(status_code=500, detail="Error during chat response")
-
-

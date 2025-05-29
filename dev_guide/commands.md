@@ -14,6 +14,7 @@
 1. python -m app.container.utils
 
 
-# Commands for docker
+# Commands for docker(Just follow this if u want to just run the app)
 1.docker build -t deep-analysis .
+
 2.docker run -d -p 8000:8000 deep-analysis
