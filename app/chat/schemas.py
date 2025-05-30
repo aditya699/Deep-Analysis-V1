@@ -52,3 +52,9 @@ class ChatResponse(BaseModel):
     code: str
     code_explanation: str
 
+class MessageFeedback(BaseModel):
+    """Message feedback model"""
+    message_id: str
+    session_id: str
+    feedback: str #"thumbs up" or "thumbs down"
+    created_at: datetime

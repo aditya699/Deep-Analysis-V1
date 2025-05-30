@@ -338,6 +338,13 @@ async def chat_response(
             # Extract code if available
             if hasattr(output, 'code') and output.code:
                 code_content = output.code
+
+                #Step 4: Explain what the code is doing for observability
+                code_explain=openai_client.responses.create(
+                                    model="gpt-4.1-mini",
+                                    input=f"Explain what the following code is doing so that the business user can understand it. Format your explanation as a numbered list where each step starts with 'This code does:' followed by the action. For example: '1. This code does: Loads the data from the CSV file' : {code_content if code_content else None}.If no code is present, just say 'No code was generated'",
+                                    instructions="You are a helpful assistant that can explain code to business users. You should explain the code in a way that is easy to understand."
+                                )
             
             if hasattr(output, 'content'):
                 for content in output.content:
@@ -350,27 +357,17 @@ async def chat_response(
                                 print("I Ran")
                                 file_url = await download_file_from_container(file_id,container_id, blob_client)
 
-                                #Step 4: Explain what the code is doing for observability
-                                code_explain=openai_client.responses.create(
-                                    model="gpt-4.1-mini",
-                                    input=f"Explain what the following code is doing so that the business user can understand it. Format your explanation as a numbered list where each step starts with 'This code does:' followed by the action. For example: '1. This code does: Loads the data from the CSV file' : {code_content if code_content else None}.If no code is present, just say 'No code was generated'",
-                                    instructions="You are a helpful assistant that can explain code to business users. You should explain the code in a way that is easy to understand."
-                                )
+                            
         
         if code_explain is None:
             code_explain_text = None
         else:
             code_explain_text = code_explain.output_text
 
-        output_response={
-            "response": response.output_text,
-            "code": code_content,
-            "code_explanation": code_explain_text,
-            "file_url": file_url
-        }
+
 
         #Insert the assistant response into the database
-        await db["messages"].insert_one({
+        result= await db["messages"].insert_one({
             "session_id": session_id,
             "role": "assistant",
             "content": response.output_text,
@@ -379,8 +376,38 @@ async def chat_response(
             "metadata": {"code": code_content, "code_explanation": code_explain_text, "file_url": file_url}
         })
 
+        output_response={
+            "response": response.output_text,
+            "code": code_content,
+            "code_explanation": code_explain_text,
+            "file_url": file_url,
+           "message_id": str(result.inserted_id) 
+        }
+
         return output_response
 
     except Exception as e:
         await log_error(e, "chat/routes.py", "chat_response")
         raise HTTPException(status_code=500, detail="Error during chat response")
+
+@router.post("/feedback")
+async def submit_feedback(
+    message_id: str,
+    feedback: str,  # "thumbs_up" or "thumbs_down"
+    db: Database = Depends(get_db)
+):
+    try:
+        # Store feedback in MongoDB
+        feedback_doc = {
+            "message_id": message_id,
+            "feedback": feedback,
+            "created_at": datetime.utcnow()
+        }
+        
+        await db["message_feedback"].insert_one(feedback_doc)
+        
+        return {"message": "Feedback submitted successfully", "success": True}
+        
+    except Exception as e:
+        await log_error(error=e, location="submit_feedback")
+        raise HTTPException(status_code=500, detail="Error submitting feedback")
