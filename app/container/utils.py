@@ -4,7 +4,7 @@ Note: Here we will having all the utilities for the container , which is a sandb
 import asyncio
 from app.llm.openai_client import get_openai_client
 from app.db.mongo import log_error
-from app.container.schemas import Container
+from app.container.schemas import ContainerSchema
 from datetime import datetime
 from app.db.mongo import get_db
 import requests
@@ -23,7 +23,7 @@ async def create_new_container():
         client = await get_openai_client()
         # Generate a unique name for the container
         container_name = f"container-{uuid.uuid4().hex[:8]}"
-        container = client.containers.create(name=container_name)
+        container = await client.containers.create(name=container_name)
         container_id = container.id
         return container_id
     except Exception as e:
@@ -39,14 +39,23 @@ async def get_all_active_containers():
         db = await get_db()
         print(f"Database connection established: {db.name}")
         
-        containers = client.containers.list()
+        # For async client, we need to iterate through the paginator
+        containers_paginator = client.containers.list()
+        containers_list = []
+        
+        # Collect all containers from the paginator
+        async for container in containers_paginator:
+            containers_list.append(container)
+        
+        print(f"Containers: {containers_list}")
+        
         # Find first active (running) container
         active_container = None
-        for container in containers.data:
-                print(f"Container {container.id}: {container.status}")
-                if container.status == "running":
-                            active_container = container
-                            break
+        for container in containers_list:
+            print(f"Container {container.id}: {container.status}")
+            if container.status == "running":
+                active_container = container
+                break
                 
         if active_container is None:
             # Create a new container
@@ -54,7 +63,7 @@ async def get_all_active_containers():
             print(f"Created new container with ID: {container_id}")
             
             # Create container document
-            container_doc = Container(container_id=container_id, created_at=datetime.now()).model_dump()
+            container_doc = ContainerSchema(container_id=container_id, created_at=datetime.now()).model_dump()
             print(f"Container document to insert: {container_doc}")
             
             # Insert into database
@@ -65,7 +74,7 @@ async def get_all_active_containers():
         else:
             print(f"Using existing container: {active_container.id}")
             # Create container document for existing container
-            container_doc = Container(container_id=active_container.id, created_at=datetime.now()).model_dump()
+            container_doc = ContainerSchema(container_id=active_container.id, created_at=datetime.now()).model_dump()
             print(f"Container document to insert: {container_doc}")
             
             # Insert into database

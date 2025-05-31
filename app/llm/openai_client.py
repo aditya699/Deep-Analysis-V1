@@ -1,5 +1,5 @@
 # Import Library
-from openai import OpenAI
+from openai import AsyncOpenAI
 import os
 import requests
 from app.core.config import settings
@@ -7,7 +7,7 @@ from app.core.config import settings
 from app.db.mongo import log_error
 
 # Initialize client (note: This will be initialized once and reused)
-client: OpenAI | None = None
+client: AsyncOpenAI | None = None
 
 async def get_openai_client():
     """
@@ -17,7 +17,7 @@ async def get_openai_client():
     global client
     try:
         if client is None:
-            client = OpenAI(api_key=settings.OPENAI_API_KEY)
+            client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
         return client
     
     except Exception as e:

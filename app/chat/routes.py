@@ -320,7 +320,7 @@ async def chat_response(
         """
 
         # Step 3: Analyze with code interpreter
-        response = openai_client.responses.create(
+        response = await openai_client.responses.create(
             model="gpt-4.1-mini",
             tools=[{"type": "code_interpreter", "container": container_id}],
             tool_choice="auto",
@@ -340,7 +340,7 @@ async def chat_response(
                 code_content = output.code
 
                 #Step 4: Explain what the code is doing for observability
-                code_explain=openai_client.responses.create(
+                code_explain=await openai_client.responses.create(
                                     model="gpt-4.1-mini",
                                     input=f"Explain what the following code is doing so that the business user can understand it. Format your explanation as a numbered list where each step starts with 'This code does:' followed by the action. For example: '1. This code does: Loads the data from the CSV file' : {code_content if code_content else None}.If no code is present, just say 'No code was generated'",
                                     instructions="You are a helpful assistant that can explain code to business users. You should explain the code in a way that is easy to understand."
@@ -411,3 +411,84 @@ async def submit_feedback(
     except Exception as e:
         await log_error(error=e, location="submit_feedback")
         raise HTTPException(status_code=500, detail="Error submitting feedback")
+
+@router.post("/chat_summary")
+async def chat_summary(
+    session_id: str,
+    current_user: dict = Depends(get_current_user),
+    db: Database = Depends(get_db)
+):
+    """
+    This endpoint generates a summary of the chat session, collects all generated images,
+    and stores the summary in the database.
+    """
+    try:
+        # Get the session from the database
+        session = await db["csv_sessions"].find_one({"session_id": session_id})
+        if not session:
+            raise HTTPException(status_code=404, detail="Session not found")
+        
+        # Get the message history for the session
+        message_history = await db["messages"].find(
+            {"session_id": session_id}
+        ).sort("created_at", 1).to_list(length=None)
+
+        # Collect all image URLs from the message history
+        image_urls = []
+        for message in message_history:
+            if message.get("metadata") and message["metadata"].get("file_url"):
+                image_urls.append(message["metadata"]["file_url"])
+
+        # Create prompt for summary generation
+        prompt = f"""
+        You are a business analyst tasked with extracting key business insights from a chat conversation about data analysis.
+
+        Please analyze the following chat history and provide a concise summary that focuses ONLY on:
+        1. Key business insights discovered from the data
+    
+        Ignore technical details, casual conversation, and focus exclusively on business-relevant insights that would help stakeholders make informed decisions.
+
+        Chat history:
+        {message_history}
+
+        Provide your response in a clear, executive-summary format with bullet points for easy reading.
+        """
+
+        # Get the openai client
+        openai_client = await get_openai_client()
+
+        # Get the chat summary using async response
+        response = await openai_client.responses.create(
+            model="gpt-4.1-mini",
+            input=prompt,
+            instructions="You are a helpful assistant that can summarize the chat history for the user. You should summarize the chat history in a way that is easy to understand."
+        )
+
+        # Create summary document for database
+        summary_doc = {
+            "session_id": session_id,
+            "user_id": str(current_user["_id"]),
+            "user_email": current_user["email"],
+            "summary": response.output_text,
+            "image_urls": image_urls,
+            "created_at": datetime.utcnow()
+        }
+
+        # Store summary in database
+        await db["chat_summaries"].insert_one(summary_doc)
+
+        return {
+            "summary": response.output_text,
+            "image_urls": image_urls,
+            "success": True
+        }
+
+    except Exception as e:
+        await log_error(e, "chat/routes.py", "chat_summary")
+        raise HTTPException(status_code=500, detail="Error during chat summary")
+
+        
+        
+        
+        
+
