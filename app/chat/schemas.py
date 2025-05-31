@@ -22,6 +22,7 @@ class CSVSession(BaseModel):
     user_id: str
     file_info: FileInfo
     csv_info: CSVInfo
+    smart_questions: List[str]
     created_at: datetime
     updated_at: datetime
     status: str = "active"
@@ -33,6 +34,7 @@ class UploadCSVResponse(BaseModel):
     file_name: str
     preview_data: List[Dict[str, Any]]
     file_info: FileInfo
+    smart_questions: List[str]
     message: str
     success: bool
 
@@ -58,3 +60,7 @@ class MessageFeedback(BaseModel):
     session_id: str
     feedback: str #"thumbs up" or "thumbs down"
     created_at: datetime
+
+class SmartQuestions(BaseModel):
+    """Let the Model suggest some smart questions which the user may want to ask"""
+    questions_list: List[str]

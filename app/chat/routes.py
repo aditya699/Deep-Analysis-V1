@@ -11,7 +11,7 @@ from azure.core.exceptions import AzureError
 from azure.storage.blob.aio import BlobServiceClient
 from app.core.config import settings
 from app.db.mongo import log_error
-from app.chat.schemas import UploadCSVResponse, ChatResponse
+from app.chat.schemas import UploadCSVResponse, ChatResponse, SmartQuestions
 from app.container.utils import get_all_active_containers, upload_file_to_container
 import base64
 from azure.storage.blob import BlobBlock
@@ -188,6 +188,39 @@ async def upload_csv_true_streaming(
     if csv_preview_data is None:
         raise HTTPException(status_code=400, detail="Could not extract CSV preview")
     
+    # Generate smart questions using OpenAI
+    
+    try:
+        openai_client = await get_openai_client()
+        
+        # Create prompt for smart questions generation
+        smart_questions_prompt = f"""
+        Based on the following CSV file information, generate 5 smart, insightful questions that a business analyst might want to ask about this data:
+
+        File name: {file.filename}
+        Columns: {column_names}
+        Sample data: {csv_preview_data}
+
+        Generate questions that would help uncover business insights, trends, patterns, or actionable information from this dataset. 
+        Make the questions specific to the data structure and content shown.
+        """
+        
+        response = await openai_client.responses.parse(
+            model="gpt-4.1-mini",
+            input=[
+                {"role": "system", "content": "Generate exactly 5 smart business questions about the CSV data based on the provided information."},
+                {"role": "user", "content": smart_questions_prompt}
+            ],
+            text_format=SmartQuestions
+        )
+        
+        smart_questions = response.output_parsed.questions_list
+        print(f"✅ Generated {len(smart_questions)} smart questions")
+        
+    except Exception as e:
+        print(f"⚠️ Error generating smart questions: {e}")
+        smart_questions = []
+    
     # 3. Save session data to MongoDB
     try:
         session_document = {
@@ -207,6 +240,7 @@ async def upload_csv_true_streaming(
                 "column_names": column_names,
                 "preview_data": csv_preview_data
             },
+            "smart_questions": smart_questions,
             "created_at": datetime.utcnow(),
             "updated_at": datetime.utcnow(),
             "status": "active"
@@ -235,8 +269,10 @@ async def upload_csv_true_streaming(
         )
         raise HTTPException(status_code=500, detail="Failed to create session in database")
     
-    # 4. Return response
-    return {
+    # 4. Return response with smart questions
+
+    print(f"Smart questions: {smart_questions}")
+    response_data = {
         "session_id": session_id,
         "file_url": file_url,
         "file_name": file.filename,
@@ -249,10 +285,12 @@ async def upload_csv_true_streaming(
             "file_size": total_size,
             "content_type": "text/csv"
         },
+        "smart_questions": smart_questions,
         "message": "CSV file uploaded successfully with true streaming",
         "success": True
     }
     
+    return response_data
 
 @router.post("/chat")
 async def chat_response(
