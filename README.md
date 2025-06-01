@@ -1,6 +1,29 @@
 # Deep Analysis V1
 
-A powerful API-driven analysis platform built with FastAPI, MongoDB, and OpenAI integration for advanced data processing and insights.
+A powerful AI-driven chat and data analysis platform that combines natural language processing with advanced data insights. This system enables intelligent conversations while processing and analyzing data in real-time.
+
+## 🚀 Core Capabilities
+
+- **Intelligent Chat System**: 
+  - Natural language conversations with AI
+  - Context-aware responses
+  - Real-time data analysis during conversations
+  - Multi-turn dialogue support
+
+- **Data Analysis Features**:
+  - Real-time data processing
+  - Pattern recognition
+  - Insight generation
+  - Data visualization capabilities
+  - Custom analysis workflows
+
+- **Advanced Features**:
+  - **Authentication System**: Secure user management and access control
+  - **Session Management**: Track and manage user sessions
+  - **LLM Integration**: OpenAI integration for advanced language processing
+  - **MongoDB Database**: Robust data storage and retrieval
+  - **Container Support**: Docker containerization for easy deployment
+  - **API Documentation**: Auto-generated API documentation with FastAPI
 
 ## 🚀 Features
 
@@ -83,8 +106,30 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 🔐 Security
 
-For security concerns, please email [security-email]
+For security concerns, please email meenakshi.bhtt@gmail.com
 
 ## 📞 Support
 
-For support, please open an issue in the GitHub repository or contact [support-email]
+For support, please open an issue in the GitHub repository or contact
+meenakshi.bhtt@gmail.com
+
+## 🏗️ Work in Progress
+
+### Current Development
+- [ ] Enhanced chat context management
+- [ ] Advanced data analysis algorithms
+- [ ] Real-time data visualization in chat
+- [ ] Custom analysis templates
+- [ ] Multi-modal data processing
+- [ ] Improved conversation flow
+- [ ] Advanced error handling and validation
+- [ ] Rate limiting implementation
+
+### Planned Features
+- [ ] Interactive data visualization dashboard
+- [ ] Custom analysis workflow builder
+- [ ] Real-time collaboration features
+- [ ] Advanced data source integrations
+- [ ] Automated insight generation
+- [ ] Performance optimizations
+- [ ] Enhanced security features
