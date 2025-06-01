@@ -17,15 +17,43 @@ from app.sessions.schemas import GetAllSessions
 router = APIRouter()
 
 @router.get("/get_all_sessions")
-async def get_all_sessions(current_user: dict = Depends(get_current_user), db: Database = Depends(get_db)):
+async def get_all_sessions(
+    page: int = 1, 
+    limit: int = 10, 
+    current_user: dict = Depends(get_current_user), 
+    db: Database = Depends(get_db)
+):
     try:
         email = current_user["email"]
         collection = db["csv_sessions"]
+        
+        # Calculate skip value for pagination
+        skip = (page - 1) * limit
+        
+        # Get total count for pagination metadata
+        total_count = await collection.count_documents({"user_email": email})
+        
+        # Get paginated sessions
+        cursor = collection.find({"user_email": email}).sort("created_at", -1).skip(skip).limit(limit)
         sessions = [{"_id": str(session["_id"]) if "_id" in session else None, **{k: v for k, v in session.items() if k != "_id"}} 
-                   async for session in collection.find({"user_email": email}).sort("created_at", -1)]  # Add this line
-        if not sessions:
-            return {"sessions": [], "count": 0}
-        return {"sessions": sessions, "count": len(sessions)}
+                   async for session in cursor]
+        
+        # Calculate pagination metadata
+        total_pages = (total_count + limit - 1) // limit  # Ceiling division
+        has_next = page < total_pages
+        has_prev = page > 1
+        
+        return {
+            "sessions": sessions,
+            "pagination": {
+                "current_page": page,
+                "total_pages": total_pages,
+                "total_count": total_count,
+                "limit": limit,
+                "has_next": has_next,
+                "has_prev": has_prev
+            }
+        }
     except Exception as e:
         await log_error(error=e, location="get_all_sessions", additional_info={"user_email": current_user.get("email")})
         raise HTTPException(status_code=500, detail="Internal server error")
