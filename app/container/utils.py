@@ -47,7 +47,7 @@ async def get_all_active_containers():
         async for container in containers_paginator:
             containers_list.append(container)
         
-        print(f"Containers: {containers_list}")
+        # print(f"Containers: {containers_list}")
         
         # Find first active (running) container
         active_container = None

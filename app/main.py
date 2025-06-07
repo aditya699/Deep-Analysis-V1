@@ -7,6 +7,7 @@ from app.auth.utils import handle_validation_error
 from app.chat.routes import router as chat_router
 from app.sessions.routes import router as sessions_router
 from app.llm.openai_client import client as openai_client
+from app.deep_analysis.routes import router as deep_analysis_router
 app = FastAPI(title="Deep Analysis API")
 
 # Configure CORS
@@ -22,6 +23,8 @@ app.add_middleware(
 app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
 app.include_router(chat_router, prefix="/chat", tags=["Chat"])
 app.include_router(sessions_router, prefix="/sessions", tags=["Sessions"])
+app.include_router(deep_analysis_router, prefix="/deep_analysis", tags=["Deep Analysis"])
+
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     """Handle validation errors using the utility function"""
