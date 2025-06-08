@@ -332,3 +332,40 @@ async def deep_analysis(
     except Exception as e:
         await log_error(e, "deep_analysis/routes.py", "deep_analysis")
         raise HTTPException(status_code=500, detail="Error during deep analysis")
+    
+
+@router.get("/deep_analysis/status/{session_id}")
+async def get_deep_analysis_status(
+    session_id: str,
+    current_user: dict = Depends(get_current_user),
+    db: Database = Depends(get_db)
+):
+    try:
+        deep_analysis_collection = db["deep_analysis"]
+        
+        # Find the most recent session document
+        session_data = await deep_analysis_collection.find_one(
+            {"session_id": session_id},
+            sort=[("created_at", -1)]
+        )
+        
+        if not session_data:
+            raise HTTPException(status_code=404, detail="Deep analysis session not found")
+            
+        # Extract relevant status information
+        status_info = {
+            "status": session_data.get("status", "Unknown"),
+            "kpi_list": session_data.get("kpi_list", []),
+            "kpi_status": session_data.get("kpi_status", {}),
+            "report_url": session_data.get("report_url"),
+            "created_at": session_data.get("created_at"),
+            "updated_at": session_data.get("updated_at")
+        }
+        
+        return status_info
+        
+    except Exception as e:
+        await log_error(e, "deep_analysis/routes.py", "get_deep_analysis_status")
+        raise HTTPException(status_code=500, detail="Error fetching deep analysis status")
+    
+
