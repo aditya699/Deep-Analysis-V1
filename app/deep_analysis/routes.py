@@ -97,7 +97,7 @@ async def deep_analysis(
             )
         
         kpi_list = kpi_list_response.output_parsed.kpi_list
-        kpi_list=kpi_list[:10]
+        # kpi_list=kpi_list[:10]
         print(f"Generated KPI List: {kpi_list}")
         
         #Update the session status with the kpi list and their status

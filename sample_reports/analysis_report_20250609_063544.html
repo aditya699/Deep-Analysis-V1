@@ -1,0 +1,3127 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Deep Analysis Report - b411cb00-0e36-4670-98f7-00fa3381ab82</title>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #8b5cf6;
+            --secondary: #f8fafc;
+            --accent: #06b6d4;
+            --accent-light: #22d3ee;
+            --text: #0f172a;
+            --text-light: #64748b;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --ai-glow: #8b5cf6;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --gradient-ai: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-success: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: -1;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        /* Header with AI Agent Feel */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #8b5cf6 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(1deg); }
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .ai-badge::before {
+            content: '🤖';
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
+        
+        .completion-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--gradient-success);
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            box-shadow: var(--shadow-lg);
+            animation: slideInUp 1s ease-out 0.5s both;
+        }
+        
+        .completion-status::before {
+            content: '✅';
+            font-size: 1.2rem;
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 2rem 0;
+        }
+        
+        /* Summary Section with AI Enhancement */
+        .summary-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .summary-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-ai);
+            border-radius: 1.5rem 1.5rem 0 0;
+        }
+        
+        .summary-card h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            position: relative;
+        }
+        
+        .summary-card h2::before {
+            content: '🧠';
+            font-size: 1.8rem;
+            animation: brainPulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes brainPulse {
+            0%, 100% { transform: scale(1); filter: hue-rotate(0deg); }
+            50% { transform: scale(1.1); filter: hue-rotate(20deg); }
+        }
+        
+        .dataset-info {
+            background: var(--secondary);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .dataset-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        /* Enhanced KPI Cards with AI Feel */
+        .kpi-grid {
+            display: grid;
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+        
+        .kpi-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .kpi-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(102, 126, 234, 0.25);
+        }
+        
+        .kpi-card:hover::before {
+            opacity: 1;
+        }
+        
+        .kpi-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #8b5cf6 100%);
+            color: white;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .kpi-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: shimmer 4s linear infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .kpi-header h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .kpi-header h3::before {
+            content: '⚡';
+            font-size: 1.5rem;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(180deg); }
+        }
+        
+        .kpi-content {
+            padding: 2.5rem;
+            position: relative;
+        }
+        
+        /* Enhanced Chart Section */
+        .chart-container {
+            text-align: center;
+            margin: 2rem 0;
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.8) 0%, rgba(241, 245, 249, 0.8) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent) 0%, var(--primary) 50%, var(--accent-light) 100%);
+        }
+        
+        .chart-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow-lg);
+            transition: transform 0.3s ease;
+        }
+        
+        .chart-container img:hover {
+            transform: scale(1.02);
+        }
+        
+        .no-chart {
+            padding: 4rem;
+            color: var(--text-muted);
+            font-style: italic;
+            font-size: 1.1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .no-chart::before {
+            content: '📊';
+            font-size: 3rem;
+            opacity: 0.5;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        /* Enhanced Content Sections */
+        .content-section {
+            margin: 2.5rem 0;
+        }
+        
+        .content-section h4 {
+            color: var(--primary);
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .content-section h4::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 3rem;
+            height: 2px;
+            background: var(--gradient-ai);
+            border-radius: 1px;
+        }
+        
+        .business-analysis {
+            background: linear-gradient(135deg, rgba(240, 249, 255, 0.9) 0%, rgba(224, 242, 254, 0.9) 100%);
+            backdrop-filter: blur(10px);
+            border-left: 4px solid var(--accent);
+            padding: 2rem;
+            border-radius: 1rem;
+            line-height: 1.8;
+            position: relative;
+            box-shadow: var(--shadow);
+        }
+        
+        .business-analysis::before {
+            content: '💡';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            opacity: 0.6;
+            animation: pulse 2s infinite;
+        }
+        
+        /* Styling for converted markdown content */
+        .business-analysis h1, .business-analysis h2, .business-analysis h3 {
+            color: var(--primary);
+            margin: 1.5rem 0 1rem 0;
+            font-weight: 700;
+        }
+        
+        .business-analysis h1 { font-size: 1.8rem; }
+        .business-analysis h2 { font-size: 1.5rem; }
+        .business-analysis h3 { font-size: 1.3rem; }
+        
+        .business-analysis ul {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+        
+        .business-analysis li {
+            margin: 0.5rem 0;
+            line-height: 1.6;
+        }
+        
+        .business-analysis strong {
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+        
+        .business-analysis em {
+            color: var(--text-light);
+            font-style: italic;
+        }
+        
+        .explanation-section h1, .explanation-section h2, .explanation-section h3 {
+            color: var(--primary);
+            margin: 1.5rem 0 1rem 0;
+            font-weight: 700;
+        }
+        
+        .explanation-section h1 { font-size: 1.8rem; }
+        .explanation-section h2 { font-size: 1.5rem; }
+        .explanation-section h3 { font-size: 1.3rem; }
+        
+        .explanation-section ul {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+        
+        .explanation-section li {
+            margin: 0.5rem 0;
+            line-height: 1.6;
+        }
+        
+        .explanation-section strong {
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+        
+        .explanation-section em {
+            color: var(--text-light);
+            font-style: italic;
+        }
+        
+        .code-section {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+        
+        .code-header {
+            background: #334155;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-bottom: 1px solid #475569;
+        }
+        
+        .code-content {
+            padding: 1.5rem;
+            overflow-x: auto;
+        }
+        
+        .code-content pre {
+            margin: 0;
+            font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+        
+        .explanation-section {
+            background: linear-gradient(135deg, #fefce8 0%, #fef3c7 100%);
+            border-left: 4px solid var(--warning);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            line-height: 1.7;
+        }
+        
+        .steps-section {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border-left: 4px solid var(--success);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+        }
+        
+        .steps-list {
+            list-style: none;
+            counter-reset: step-counter;
+        }
+        
+        .steps-list li {
+            counter-increment: step-counter;
+            margin: 0.75rem 0;
+            padding-left: 2rem;
+            position: relative;
+            line-height: 1.6;
+        }
+        
+        .steps-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: var(--success);
+            color: white;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--text-light);
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 0 0.5rem;
+            }
+            
+            .kpi-content {
+                padding: 1rem;
+            }
+            
+            .dataset-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Loading animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .kpi-card {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .kpi-card:nth-child(1) { animation-delay: 0.1s; }
+        .kpi-card:nth-child(2) { animation-delay: 0.2s; }
+        .kpi-card:nth-child(3) { animation-delay: 0.3s; }
+        .kpi-card:nth-child(4) { animation-delay: 0.4s; }
+        .kpi-card:nth-child(5) { animation-delay: 0.5s; }
+    </style>
+    </head>
+    <body>
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="ai-badge">AI Agent Analysis Complete</div>
+                    <h1>Deep Analysis Report</h1>
+                    <p>Powered by Advanced AI • Generated on 2025-06-09 12:05:44</p>
+                    <div class="completion-status">Analysis Successfully Completed</div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="container">
+                <!-- Executive Summary -->
+                <div class="summary-card">
+                    <h2>Executive Summary</h2>
+                    
+                    <!-- Dataset Information -->
+                    <div class="dataset-info">
+                        <h4>🔍 AI Analysis Overview</h4>
+                        <div class="dataset-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">31</div>
+                                <div class="stat-label">Columns Processed</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">30</div>
+                                <div class="stat-label">KPIs Analyzed</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">100%</div>
+                                <div class="stat-label">Analysis Complete</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">AI</div>
+                                <div class="stat-label">Powered Analysis</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- AI Generated Summary -->
+                    <div class="content-section">
+                        <h4>🤖 AI-Generated Insights</h4>
+                        <div class="business-analysis">
+                            <strong>Executive Summary of Key KPI Analyses:</strong>
+<br>
+1. <strong>Academic Performance by Major</strong>  
+<ul>
+<li>Students in technical majors like Computer Science and Engineering consistently achieve higher average exam scores compared to non-technical majors such as Arts, Psychology, and Biology.</li>
+<li>The top-performing majors are Computer Science, Engineering, Business, Biology, and Psychology, while Arts, Psychology, Biology, Business, and Engineering appear in the bottom five, indicating nuanced performance differences requiring targeted support.</li>
+</ul>
+<br>
+2. <strong>Gender and Exam Scores</strong>  
+<ul>
+<li>Exam scores are nearly identical across gender categories (Female, Male, Other), indicating gender is not a significant factor in academic achievement. Educational policies can therefore focus on other key success factors beyond gender.</li>
+</ul>
+<br>
+3. <strong>Semester Trends in Exam Scores</strong>  
+<ul>
+<li>Exam scores remain stable across semesters with a slight improvement peaking mid-study (semester 5) and a dip in the final semester (semester 8), suggesting increased difficulty or stress. Support initiatives should focus on late-stage students to address this dip.</li>
+</ul>
+<br>
+4. <strong>Study Hours and Academic Outcomes</strong>  
+<ul>
+<li>Computer Science students study more daily (~5 hours) than peers in other majors (~4 hours), which might reflect higher academic demands or competitiveness. However, the correlation between study hours and exam scores is weak (r=0.24), implying that study quality and other factors also heavily influence outcomes.</li>
+</ul>
+<br>
+5. <strong>Attendance and Exam Performance</strong>  
+<ul>
+<li>Attendance percentages are uniformly high (~70%) across majors but show virtually no correlation with exam scores, suggesting attendance alone does not predict academic success. Universities might prioritize improving study habits and engagement over attendance metrics.</li>
+</ul>
+<br>
+6. <strong>Dropout Risk and Its Drivers</strong>  
+<ul>
+<li>Dropout risk is low and consistent across majors, indicating stable student retention. However, students identified as at risk exhibit significantly higher stress levels (8.9 vs. 4.9) and exam anxiety scores (~10 vs. 8.5). This points to stress and anxiety management as critical areas for dropout prevention efforts.</li>
+</ul>
+<br>
+7. <strong>Impact of Tutoring</strong>  
+<ul>
+<li>Access to tutoring positively impacts exam scores, validating investments in tutoring services and making such support widely accessible as a strategy to enhance student performance.</li>
+</ul>
+<br>
+8. <strong>Motivation, Time Management, and Parental Support</strong>  
+<ul>
+<li>Higher exam score quartiles correspond with higher motivation levels, highlighting motivation as a strong success factor.</li>
+<li>Stable, moderate time management scores (~5.5) are linked to better exam performance, suggesting cultivating time management skills is important.</li>
+<li>Consistent parental support is observed across exam scores, with some correlation to academic success, emphasizing the value of family engagement.</li>
+</ul>
+<br>
+9. <strong>Lifestyle and External Factors</strong>  
+<ul>
+<li>Regular exercise frequency correlates positively with exam scores, indicating physical activity may enhance academic outcomes and should be encouraged.</li>
+<li>Sleep hours also correlate positively with exam success, reinforcing the importance of healthy sleep habits.</li>
+<li>Screen time increases with higher exam scores, possibly reflecting productive use of digital resources, though balanced screen usage should be maintained.</li>
+<li>Social media hours remain stable (~2.5 hrs/day) across exam brackets, suggesting limited impact on performance.</li>
+<li>Diet quality and internet quality show no significant influence on exam scores in this dataset.</li>
+<li>Part-time job status does not affect average exam scores, reassuring that work-study balance is generally manageable.</li>
+</ul>
+<br>
+10. <strong>Study Environment and Learning Style</strong>  
+<ul>
+<li>Quieter, focused study environments like “Quiet Room” and “Library” associate with higher and more consistent exam scores compared to more distracting environments such as Dorms. Optimizing study environments is advisable.</li>
+<li>Different learning styles do not yield significant exam score differences, supporting inclusive educational approaches without bias toward a specific style.</li>
+</ul>
+<br>
+11. <strong>Socioeconomic Factors</strong>  
+<ul>
+<li>Family income shows minimal impact on exam score variation, suggesting equitable academic outcomes across income groups.</li>
+<li>Higher parental education levels modestly correlate with better student exam performance, indicating potential benefits of informed parental involvement.</li>
+</ul>
+<br>
+12. <strong>Extracurricular Involvement</strong>  
+<ul>
+<li>Preliminary insights suggest possible differences in exam scores related to extracurricular participation, warranting further investigation to inform holistic student development policies.</li>
+</ul>
+<br>
+---<strong>Overall Business Recommendations:</strong><ul>
+<li><strong>Targeted Academic Support:</strong> Focus resources on non-technical majors with lower exam scores and on students in later semesters facing performance dips.</li>
+<li><strong>Mental Health & Stress Management:</strong> Prioritize stress reduction and anxiety management programs, particularly for students flagged at dropout risk.</li>
+<li><strong>Tutoring & Study Skills:</strong> Expand tutoring accessibility and invest in motivation and time management skill development initiatives.</li>
+<li><strong>Health & Wellness Promotion:</strong> Encourage regular exercise and proper sleep hygiene as part of holistic student support strategies.</li>
+<li><strong>Optimize Study Environments:</strong> Provide and promote quiet, focused study spaces to enhance academic performance.</li>
+<li><strong>Equity & Inclusiveness:</strong> Continue fostering gender equity and socioeconomic inclusiveness, as these factors show minimal disparities in performance.</li>
+<li><strong>Leverage Digital Tools:</strong> Recognize the potential role of screen time for productive studying while monitoring social media use.</li>
+<li><strong>Parental & Family Engagement:</strong> Enhance outreach and communication to leverage parental education and support as a positive influence on students.</li>
+</ul>
+<br>
+These insights provide a strategic foundation for policies and programs aimed at improving student academic outcomes, retention, and overall well-being across campus.
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- KPI Analysis Cards -->
+                <div class="kpi-grid">
+    
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Average Exam Score by Major</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/e77dd609-61a3-47ef-b9bf-f5fc2eeace05_20250609_061538.png" alt="Chart for Average Exam Score by Major" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals that students majoring in technical fields such as Computer Science and Engineering achieve higher average exam scores compared to those in non-technical majors like Arts, Psychology, and Biology. This insight suggests that academic performance varies by major, which could guide university resource allocation and support programs to help improve outcomes in majors with lower average exam scores.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv'
+df = pd.read_csv(file_path)
+
+# Calculate the average exam score by major
+avg_exam_score_by_major = df.groupby('major')['exam_score'].mean().reset_index()
+
+# Sort the results by average exam score for better visualization
+avg_exam_score_by_major = avg_exam_score_by_major.sort_values(by='exam_score', ascending=False)
+
+# Plotting the average exam score by major
+plt.figure(figsize=(12, 6))
+sns.barplot(data=avg_exam_score_by_major, x='major', y='exam_score', palette='viridis')
+plt.title('Average Exam Score by Major')
+plt.xlabel('Major')
+plt.ylabel('Average Exam Score')
+plt.xticks(rotation=45)
+plt.tight_layout()
+
+# Save the plot
+plot_path = '/mnt/data/average_exam_score_by_major.png'
+plt.savefig(plot_path)
+
+plt.show()</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code begins by loading the student dataset from a CSV file using pandas. It then groups the data by the 'major' column and computes the mean of the 'exam_score' for each major, resulting in the average exam score per major. After sorting these averages in descending order, it uses seaborn to create a bar plot showing the average exam score for each major, which it titles and labels appropriately. The plot is saved as an image file and displayed to visualize the differences in exam performance across majors.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>Loaded the dataset containing student information including their major and exam scores.</li><li>Identified the relevant columns: 'major' (categorical) and 'exam_score' (numerical).</li><li>Grouped the dataset by 'major' and calculated the mean exam score for each group.</li><li>Sorted the grouped data by average exam scores in descending order for clearer visualization.</li><li>Created and customized a bar chart to represent the average exam scores by major.</li><li>Saved the visual output as an image file for reporting purposes.</li><li>Interpreted the chart to extract business insights regarding student performance by major.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Average Exam Score by Gender</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/cc14e6ea-2338-44d6-98f7-1e38b8433b00_20250609_061609.png" alt="Chart for Average Exam Score by Gender" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals that average exam scores are very similar across different gender categories—Female, Male, and Other. Each category's average score hovers around 89, indicating minimal performance disparity by gender. This suggests that gender is not a significant factor in exam performance within this dataset. Consequently, educational interventions and policies should prioritize other determinants of academic success, such as study habits or motivation, since gender equity in academic achievement appears to be well maintained.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv'
+data = pd.read_csv(file_path)
+
+# Calculate the average exam score by gender
+avg_exam_score_by_gender = data.groupby('gender')['exam_score'].mean().reset_index()
+
+# Plotting the KPI
+plt.figure(figsize=(8, 6))
+sns.barplot(x='gender', y='exam_score', data=avg_exam_score_by_gender, palette='viridis')
+plt.title('Average Exam Score by Gender')
+plt.xlabel('Gender')
+plt.ylabel('Average Exam Score')
+plt.ylim(0, 110)
+
+# Save the chart
+plt.savefig('/mnt/data/average_exam_score_by_gender.png')
+
+# Show the chart
+plt.show()
+
+avg_exam_score_by_gender</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code first imports the necessary libraries: pandas for data manipulation, matplotlib, and seaborn for visualization. It loads the student dataset from a CSV file. Then, it groups the data by the 'gender' column and computes the mean of the 'exam_score' for each gender group. This creates a new dataframe with average scores categorized by gender. Next, it generates a bar plot visualizing these average exam scores across the gender groups, setting chart titles, axis labels, and limits. The plot is saved as a PNG file and displayed. Finally, the dataframe holding the average scores is returned.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The agent started by loading the student dataset into a DataFrame. Then, to compute the KPI, the agent grouped the data by gender to isolate exam scores within each gender category. After this, the mean exam score was calculated for each group, resulting in a simple summary statistic reflecting average performance. The agent then visualized the KPI using a bar chart to illustrate the differences—or lack thereof—among gender groups' average exam scores. The visualization helps to communicate the insights clearly that exam performance is relatively consistent across gender categories.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Average Exam Score by Semester</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/b324ade9-bd82-451e-9289-47ddc49e48d4_20250609_061649.png" alt="Chart for Average Exam Score by Semester" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals that the average exam score remains relatively stable across semesters, around 89 out of 100, indicating consistent student performance over time. There is a slight upward trend peaking around semester 5, suggesting enhancements in learning or study habits as students advance. However, a dip occurs in semester 8, possibly due to increased course difficulty or final year pressures. Universities should focus on supporting students during this final semester to address these challenges and consider leveraging the middle semesters' positive momentum.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv'
+data = pd.read_csv(file_path)
+
+# Calculate the average exam score by semester
+average_exam_score_by_semester = data.groupby('semester')['exam_score'].mean().reset_index()
+
+# Plotting the KPI: Average Exam Score by Semester
+plt.figure(figsize=(10, 6))
+sns.lineplot(x='semester', y='exam_score', data=average_exam_score_by_semester, marker='o')
+plt.title('Average Exam Score by Semester')
+plt.xlabel('Semester')
+plt.ylabel('Average Exam Score')
+plt.grid(True)
+plt.xticks(average_exam_score_by_semester['semester'])
+plt.tight_layout()
+
+# Save the chart
+chart_path = '/mnt/data/average_exam_score_by_semester.png'
+plt.savefig(chart_path)
+
+# Show the chart
+plt.show()
+
+average_exam_score_by_semester</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code starts by importing necessary libraries for data handling and visualization. It loads a CSV dataset containing student records. Then, it groups the data by the 'semester' column and calculates the mean of 'exam_score' for each semester, which serves as the KPI. The mean scores per semester are stored in a new DataFrame. A line plot is created to display how average exam scores change across semesters, with semester numbers on the x-axis and average scores on the y-axis. The plot is titled and labeled appropriately, grid lines are added, and x-axis ticks correspond to semester values. The plot is saved to a file and then displayed.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The analyst first explored the dataset to understand its structure and identify relevant columns for the KPI—primarily the 'exam_score' and 'semester' columns. Next, the data was grouped by semester to calculate the average exam score for each semester, yielding a metric representing student performance over time. This average was visualized using a line chart to detect trends or patterns across semesters. The visualization enabled the identification of consistent performance, an upward trend around the middle semesters, and a dip in the final semester. Based on the visual insights, business implications were drawn regarding student support and academic strategies.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Average Study Hours per Day by Major</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/6ee8929a-de55-49b0-8cb7-865180266005_20250609_061735.png" alt="Chart for Average Study Hours per Day by Major" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals that students majoring in Computer Science study more hours per day on average compared to other majors, with nearly 5 hours daily. Other majors such as Psychology, Arts, Engineering, Business, and Biology have similar average study hours, around 4 hours per day. This indicates a higher study commitment among Computer Science students, possibly due to the technical demands or competitive nature of the field. Academic planners and resource allocators should consider providing additional support specifically for Computer Science students to help maintain or improve their academic performance.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+df = pd.read_csv('/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv')
+
+# Calculate the average study hours per day by major
+average_study_hours_by_major = df.groupby('major')['study_hours_per_day'].mean().sort_values(ascending=False)
+
+# Visualize the average study hours per day by major
+plt.figure(figsize=(12, 6))
+sns.barplot(x=average_study_hours_by_major.index, y=average_study_hours_by_major.values, palette='viridis')
+plt.title('Average Study Hours per Day by Major')
+plt.xlabel('Major')
+plt.ylabel('Average Study Hours per Day')
+plt.xticks(rotation=45, ha='right')
+plt.tight_layout()
+
+# Save and show the plot
+plt.savefig('/mnt/data/average_study_hours_by_major.png')
+plt.show()</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code first imports the necessary libraries pandas, matplotlib, and seaborn for data manipulation and visualization. It loads the student dataset from a CSV file into a DataFrame. It then groups the data by the 'major' column and calculates the mean of 'study_hours_per_day' for each major, sorting the results in descending order. Using seaborn, it creates a bar plot to visualize the average daily study hours by major, customizing the plot size, labels, and title. The plot is saved as a PNG file and displayed for review.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The agent started by loading the student dataset from a CSV file to inspect the data. The key KPI identified was 'study_hours_per_day', and the grouping was done by 'major'. The agent computed the KPI by grouping the data by major and calculating the average study hours per day for each major. This result was sorted in descending order to identify which majors have higher average study hours. Finally, the agent visualized these averages using a bar plot with clear labels and titles, saving the plot for presentation and further analysis.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Average Attendance Percentage by Major</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/27738fbc-10b2-4e9d-a3ab-435e882f85c0_20250609_061812.png" alt="Chart for Average Attendance Percentage by Major" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals that average attendance percentages across different majors are very similar, ranging narrowly from about 69.8% to 70.2%. Computer Science students have the highest average attendance at approximately 70.2%, followed closely by Arts and Psychology majors. Engineering students exhibit slightly lower attendance, though the difference is minimal. This consistency suggests that student engagement via attendance is broadly uniform across majors. Business-wise, this points to the potential effectiveness of university-wide attendance improvement initiatives rather than requiring major-specific strategies. Slight additional focus on Engineering might help understand and address its marginally lower attendance.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv'
+df = pd.read_csv(file_path)
+
+# Calculate the average attendance percentage by major
+average_attendance_by_major = df.groupby('major')['attendance_percentage'].mean().sort_values(ascending=False)
+
+# Create a bar plot for average attendance percentage by major
+plt.figure(figsize=(12, 8))
+sns.barplot(x=average_attendance_by_major.values, y=average_attendance_by_major.index, palette='viridis')
+plt.xlabel('Average Attendance Percentage')
+plt.ylabel('Major')
+plt.title('Average Attendance Percentage by Major')
+plt.xlim(0, 100)
+plt.grid(axis='x', linestyle='--', alpha=0.7)
+
+# Save the chart
+chart_path = '/mnt/data/average_attendance_percentage_by_major.png'
+plt.savefig(chart_path)
+
+plt.show()</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code first imports necessary libraries: pandas for data manipulation and matplotlib with seaborn for visualization. It reads the student dataset from a CSV file into a pandas DataFrame. Next, it groups the data by the 'major' column and calculates the mean of the 'attendance_percentage' for each major, ordering the results in descending order. Then, a horizontal bar chart is created using seaborn to visualize the average attendance percentages across majors with labels and grid styling for clarity. The plot is saved as an image file for external use and displayed inline.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The analyst began by loading the student dataset and inspecting its structure. They identified 'attendance_percentage' and 'major' as relevant columns for the KPI. To compute the KPI 'Average Attendance Percentage by Major,' they grouped the data by the major field, then calculated the mean attendance for each group. The results were sorted to facilitate comparison. For better comprehension and communication, these averages were visualized using a horizontal bar chart, which highlights the relative attendance levels across majors. This approach provides clear business insights into attendance behavior segmented by academic major.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Distribution of Dropout Risk (Yes/No) by Major</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/433e5dac-60d2-40a9-9170-02a5844214be_20250609_061842.png" alt="Chart for Distribution of Dropout Risk (Yes/No) by Major" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals that across all majors in the dataset, the proportion of students at dropout risk ('Yes') is very low compared to those not at risk ('No'). This indicates a generally stable student population with respect to retention across different majors. The consistent low dropout risk implies that there are no major-specific dropout concerns. Business-wise, this suggests that retention efforts and resources should be focused on maintaining the supportive environment that currently sustains low dropout rates, while targeting early identification and support for the small subset of at-risk students rather than broad interventions by major.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset to understand its structure and contents
+file_path = '/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv'
+df = pd.read_csv(file_path)
+
+# Calculate the distribution of dropout risk by major
+dropout_distribution = df.groupby(['major', 'dropout_risk']).size().unstack(fill_value=0)
+
+# Normalize by row to get percentages
+dropout_distribution_percent = dropout_distribution.div(dropout_distribution.sum(axis=1), axis=0) * 100
+
+# Plotting
+plt.figure(figsize=(14, 8))
+dropout_distribution_percent.plot(kind='bar', stacked=True, color=['green', 'red'])
+plt.title('Distribution of Dropout Risk by Major')
+plt.xlabel('Major')
+plt.ylabel('Percentage (%)')
+plt.xticks(rotation=45, ha='right')
+plt.legend(title='Dropout Risk')
+plt.tight_layout()
+
+# Save the figure
+chart_path = '/mnt/data/dropout_risk_distribution_by_major.png'
+plt.savefig(chart_path)
+
+plt.show()
+
+chart_path</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code starts by importing necessary libraries: pandas for data manipulation, and matplotlib.pyplot and seaborn for visualization. It loads the dataset from a specified CSV file path into a pandas DataFrame. Then, it computes the distribution of dropout risk ('Yes' or 'No') for each major by grouping the data and counting occurrences. These counts are converted to percentages for each major to reflect the proportion of students at risk versus not at risk. The percentages are visualized as a stacked bar chart with green bars representing 'No' dropout risk and red bars representing 'Yes', making it easy to compare dropout risk distributions across majors visually. The plot is saved as an image file and displayed.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>Load the dataset into a pandas DataFrame from the provided CSV file.</li><li>Group the data by 'major' and 'dropout_risk' to count the number of students in each category.</li><li>Transform counts into percentages to normalize by major and enable comparison.</li><li>Use a stacked bar chart to visualize the percentage distribution of dropout risk ('Yes' and 'No') for each major.</li><li>Interpret the plotted data to derive business insights regarding dropout risk distribution.</li><li>Save the visualization chart for reporting or further use.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Average Stress Level by Dropout Risk</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/30ffc75c-108d-4abe-a0fd-6fa8a3624750_20250609_061912.png" alt="Chart for Average Stress Level by Dropout Risk" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals a significant disparity in average stress levels between students who are at risk of dropping out and those who are not. Students classified as 'At Risk' exhibit a much higher average stress level (around 8.89) compared to their counterparts who are not at risk (approximately 4.93). This strong correlation suggests that elevated stress levels are a critical factor associated with dropout risk. Consequently, it highlights the importance for educational institutions to prioritize mental health interventions, stress management programs, and targeted support services for students flagged as at risk, which could be pivotal in reducing dropout rates and improving student retention.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv'
+df = pd.read_csv(file_path)
+
+# Calculate average stress level by dropout risk
+avg_stress_by_dropout = df.groupby('dropout_risk')['stress_level'].mean().reset_index()
+
+# Plotting
+plt.figure(figsize=(8, 6))
+sns.barplot(data=avg_stress_by_dropout, x='dropout_risk', y='stress_level', palette='viridis')
+plt.title('Average Stress Level by Dropout Risk')
+plt.xlabel('Dropout Risk')
+plt.ylabel('Average Stress Level')
+plt.ylim(0, 10)  # Assuming stress level scale is 0-10
+plt.grid(axis='y')
+
+# Save and show the plot
+plt.savefig('/mnt/data/average_stress_level_by_dropout_risk.png')
+plt.show()
+
+avg_stress_by_dropout</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code first imports necessary libraries: pandas for data manipulation, matplotlib and seaborn for visualization. It then loads the student dataset from a specified CSV file path. The key computation groups the dataset by the 'dropout_risk' column and calculates the mean of the 'stress_level' for each group. This aggregation produces a table with average stress levels segmented by dropout risk categories. Subsequently, the code creates a bar plot showing these averages, setting the axes labels, title, and y-axis limits based on the presumed stress scale (0 to 10). The plot is saved to a file and displayed. The result provides a clear visual comparison of stress levels for students at risk and not at risk of dropping out.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>Load the dataset from the provided CSV file path.</li><li>Examine the dataset structure and initial records to ensure proper loading.</li><li>Group the dataset by 'dropout_risk' and calculate the average 'stress_level' in each group.</li><li>Create a bar plot to visualize the average stress levels by dropout risk using seaborn.</li><li>Set plot details such as title, axis labels, y-limits, and gridlines for readability.</li><li>Save the visualization plot as an image file.</li><li>Analyze the computed averages and visual output to draw business insights about the relationship between stress levels and dropout risk, suggesting intervention needs for at-risk students.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Average Exam Anxiety Score by Dropout Risk</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/50b56708-0b3f-4ffb-afba-3367cf2704da_20250609_061954.png" alt="Chart for Average Exam Anxiety Score by Dropout Risk" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis indicates that students who are identified as having a dropout risk tend to have higher exam anxiety scores on average compared to those who are not at risk of dropping out. Specifically, students with dropout risk have an average exam anxiety score around 10, whereas those without risk have an average near 8.5. This suggests exam anxiety is potentially an important factor related to dropout risk, implying that interventions aimed at reducing exam anxiety might help in lowering dropout rates.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv'
+df = pd.read_csv(file_path)
+
+# Calculate the average exam anxiety score by dropout risk
+avg_anxiety_by_dropout = df.groupby('dropout_risk')['exam_anxiety_score'].mean().reset_index()
+
+# Plotting the KPI
+plt.figure(figsize=(8, 5))
+sns.barplot(x='dropout_risk', y='exam_anxiety_score', data=avg_anxiety_by_dropout, palette='viridis')
+plt.title('Average Exam Anxiety Score by Dropout Risk')
+plt.xlabel('Dropout Risk')
+plt.ylabel('Average Exam Anxiety Score')
+plt.ylim(0, 12)
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+
+# Save the plot
+plt.savefig('/mnt/data/avg_exam_anxiety_by_dropout_risk.png')
+
+# Show the plot
+plt.show()</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code begins by importing necessary libraries: pandas for data manipulation, matplotlib and seaborn for visualization. It reads a CSV file into a DataFrame, then groups the data by the 'dropout_risk' column to compute the mean 'exam_anxiety_score' for each category. The grouping results are stored in a new DataFrame. Next, a bar plot is created to visualize these average scores, with appropriate axis labels, title, and gridlines. The plot is saved as a PNG image and displayed.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The agent computed the KPI by first loading the student dataset and identifying key columns related to exam anxiety and dropout risk. Then, it performed a group-by operation on the dropout risk status to calculate the mean exam anxiety score for each group (Yes or No for dropout risk). This average was summarized into a concise DataFrame which served as the basis for visualization. Finally, the agent plotted these averages using a bar chart to illustrate the relationship between dropout risk and exam anxiety score, highlighting that students with a dropout risk generally have higher anxiety scores.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Correlation between Study Hours per Day and Exam Score</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/52860407-8967-46b4-9d9d-74c8fee2c115_20250609_062033.png" alt="Chart for Correlation between Study Hours per Day and Exam Score" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals a positive but weak correlation (r = 0.24) between students' study hours per day and their exam scores. This suggests that while increasing study hours tends to improve exam performance, the effect is modest and not consistent across all students. There is considerable variability in exam scores for any given study duration, indicating that factors beyond just study time, such as study quality, stress levels, and learning environments, significantly impact exam outcomes. Therefore, educational strategies should not only focus on encouraging more study hours but also on improving other influencing factors to enhance student performance more effectively.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv'
+df = pd.read_csv(file_path)
+
+# Calculate the correlation coefficient between study_hours_per_day and exam_score
+correlation = df['study_hours_per_day'].corr(df['exam_score'])
+
+# Plotting the relationship with a scatter plot and a regression line
+plt.figure(figsize=(10, 6))
+sns.regplot(x='study_hours_per_day', y='exam_score', data=df, scatter_kws={'alpha':0.5}, line_kws={"color":"red"})
+plt.title(f'Correlation between Study Hours per Day and Exam Score (r = {correlation:.2f})')
+plt.xlabel('Study Hours per Day')
+plt.ylabel('Exam Score')
+plt.grid(True)
+plt.tight_layout()
+
+# Save and show the plot
+plot_path = '/mnt/data/study_hours_vs_exam_score.png'
+plt.savefig(plot_path)
+plt.show()</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code begins by importing necessary libraries, pandas for data handling, and matplotlib and seaborn for visualization. It loads a CSV dataset containing student data, specifically columns for study hours per day and exam scores. It then calculates the Pearson correlation coefficient to measure the linear relationship between these two variables. A scatter plot with a regression line is created to visually depict the correlation, with transparency on points for better visibility. The plot is labeled, formatted, and saved as an image file before being displayed.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>First, the dataset was read into a pandas DataFrame to inspect its structure and confirm the presence of relevant columns. Next, the Pearson correlation coefficient was computed between 'study_hours_per_day' and 'exam_score' to quantify their linear relationship. Then, a scatter plot with an overlaid regression line was generated using seaborn to visualize the association between study hours and exam scores. Finally, the plot was saved for reference and displayed to assist in interpreting the analysis results.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Correlation between Attendance Percentage and Exam Score</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/bfef3915-5d6b-47fb-b14e-c1d87fa58409_20250609_062118.png" alt="Chart for Correlation between Attendance Percentage and Exam Score" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals that there is almost no linear correlation between students' attendance percentage and their exam scores. Despite intuition that attendance might improve exam outcomes, this dataset shows that exam performance remains largely unaffected by attendance rates. As a result, focusing solely on increasing attendance might not significantly boost exam results. This insight suggests that educational interventions should consider other factors influencing exam performance, such as study habits, motivation, or learning environment, to better support student success.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv'
+df = pd.read_csv(file_path)
+
+# Display basic information and head of dataset
+df.info(), df.head()
+
+# Calculate correlation coefficient between attendance_percentage and exam_score
+correlation = df['attendance_percentage'].corr(df['exam_score'])
+
+# Create a scatter plot with regression line to visualize the correlation
+plt.figure(figsize=(10, 6))
+sns.regplot(x='attendance_percentage', y='exam_score', data=df, scatter_kws={'alpha':0.3}, line_kws={'color':'red'})
+plt.title(f'Correlation between Attendance Percentage and Exam Score\nCorrelation Coefficient = {correlation:.2f}', fontsize=16)
+plt.xlabel('Attendance Percentage')
+plt.ylabel('Exam Score')
+plt.grid(True)
+plt.tight_layout()
+
+# Save the plot
+plot_path = '/mnt/data/attendance_vs_exam_score_correlation.png'
+plt.savefig(plot_path)
+
+# Show the plot
+plt.show()</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code begins by loading a CSV file containing student data into a pandas DataFrame. It then reviews the structure and content of the data using info() and head() methods. Next, it computes the Pearson correlation coefficient between 'attendance_percentage' and 'exam_score' using pandas' corr() method. To visualize this relationship, the code uses seaborn's regplot to create a scatter plot with a regression line, setting transparency for scatter points and color for the regression line. The plot is titled to display the correlation coefficient, and axis labels are added for clarity. The figure is saved as a PNG file and then displayed.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The agent first loaded the dataset to understand the data structure and key columns such as attendance_percentage and exam_score. Then, the correlation coefficient between these two numeric columns was calculated to quantify the linear relationship. Following that, a scatter plot with a regression line was generated to visually assess the correlation pattern. The plot title included the computed correlation to summarize the finding. Finally, the visualization was saved for reporting purposes. From the near-zero correlation coefficient and the plot showing a uniform distribution of exam scores across attendance levels, the agent concluded there is no significant linear relationship between attendance and exam score in this dataset.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Average Exam Score by Part-time Job Status</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/a74ae31d-cc74-47b1-b0a1-41aab6c5bdef_20250609_062154.png" alt="Chart for Average Exam Score by Part-time Job Status" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis indicates that there is no significant difference in average exam scores between students who have part-time jobs and those who do not. Both groups perform at almost the same academic level, suggesting that holding a part-time job does not adversely affect students' exam performance. This insight could reassure educators and policymakers that students can manage part-time work alongside their studies without negatively impacting their academic results.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv'
+df = pd.read_csv(file_path)
+
+# Calculate average exam score by part-time job status
+avg_exam_score_by_job_status = df.groupby('part_time_job')['exam_score'].mean().reset_index()
+
+# Plot the results
+plt.figure(figsize=(8, 6))
+sns.barplot(x='part_time_job', y='exam_score', data=avg_exam_score_by_job_status, palette='viridis')
+plt.title('Average Exam Score by Part-time Job Status')
+plt.xlabel('Part-time Job Status')
+plt.ylabel('Average Exam Score')
+plt.ylim(0, 110)
+
+plot_path = '/mnt/data/average_exam_score_by_part_time_job_status.png'
+plt.savefig(plot_path)
+plt.show()
+
+avg_exam_score_by_job_status, plot_path</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code first imports the necessary libraries: pandas for data manipulation, and matplotlib and seaborn for visualization. It reads the dataset containing student details, including their exam scores and part-time job status. The dataset is grouped by the 'part_time_job' column to compute the mean exam score for students with and without part-time jobs. After calculating these averages, the code creates a bar plot to visually compare the average exam scores between the two groups. Finally, the plot is saved to a file and displayed for review.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The agent began by loading the student dataset to understand the data structure. They then focused on calculating the key performance indicator (KPI) of interest: the average exam score segmented by part-time job status. The dataset was grouped based on whether a student had a part-time job, followed by computing the mean exam score for each group. Visualizing the results using a bar chart helped to easily compare the two groups. The agent interpreted the visual and numerical results to conclude that the presence of a part-time job does not significantly impact exam scores, providing a clear business insight based on the data.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Distribution of Exam Score by Family Income Range</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/7b74b1f7-aa79-46db-835c-f970f7f29422_20250609_062246.png" alt="Chart for Distribution of Exam Score by Family Income Range" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis focused on exploring the relationship between students' exam scores and their family income ranges. The key insight is that exam scores are relatively consistent across different family income groups (Low, Medium, High), with similar median scores and variability. This suggests that family income is not a significant factor influencing exam performance in this dataset, indicating a relatively equitable academic outcome regardless of income level. However, some outliers with lower scores were observed particularly in the Low and Medium income groups.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv'
+df = pd.read_csv(file_path)
+
+# Inspect dataset
+print(df.head())
+print(df.info())
+
+# Check unique income categories
+income_categories = df['family_income_range'].unique()
+print(income_categories)
+
+# Plot boxplot of exam scores by family income range
+plt.figure(figsize=(10, 6))
+sns.boxplot(x='family_income_range', y='exam_score', data=df, order=['Low', 'Medium', 'High'])
+plt.title('Distribution of Exam Score by Family Income Range')
+plt.xlabel('Family Income Range')
+plt.ylabel('Exam Score')
+plt.grid(True, linestyle='--', alpha=0.6)
+plt.savefig('/mnt/data/exam_score_distribution_by_income_range.png')
+plt.show()</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code starts with importing necessary libraries, pandas for data manipulation, and matplotlib/seaborn for visualization. It loads the student dataset from a CSV file and inspects basic structure and content with head() and info() methods. Then, it retrieves the unique categories from the 'family_income_range' column to understand the groups present. Finally, it creates a boxplot to visualize how exam scores are distributed across the three income groups ('Low', 'Medium', and 'High'), showing central tendencies, spread, and outliers, saving the plot as a PNG file.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The analyst first loaded and inspected the dataset to understand its structure and variable types. They identified the 'family_income_range' variable and its distinct categories. The main KPI is the distribution of 'exam_score' segmented by these income ranges. To analyze this, they generated a boxplot to visualize the exam score distribution by income category, enabling comparison of medians, interquartile ranges, and outliers. From this visualization and the data, they inferred that exam scores are fairly consistent across income groups, leading to the business insight that family income does not significantly impact exam performance in this dataset.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Average Motivation Level by Exam Score Quartiles</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/c8fa8053-b65d-4f34-9d29-d87f2a5395ab_20250609_062333.png" alt="Chart for Average Motivation Level by Exam Score Quartiles" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals a positive relationship between students' motivation levels and their exam scores. Students in the lowest exam score quartile have the lowest average motivation, while those in the highest quartile display the highest average motivation levels. This suggests that higher motivation may be associated with better exam performance, highlighting the importance of motivation in academic success.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv'
+data = pd.read_csv(file_path)
+
+# Calculate unique quantiles for exam scores
+quantiles = data['exam_score'].quantile([0, 0.25, 0.5, 0.75, 1]).unique()
+
+# Bin the exam scores into quartiles based on calculated quantiles
+# Include lowest to assign leftmost edge
+# This handles duplicate edges problem
+
+# Create quartile bins
+
+# Note: pd.cut automatically assigns intervals as categories
+
+data['exam_score_quartile'] = pd.cut(data['exam_score'], bins=quantiles, include_lowest=True)
+
+# Group by these quartiles and calculate average motivation level
+avg_motivation_by_quartile = data.groupby('exam_score_quartile')['motivation_level'].mean().reset_index()
+
+# Plot the average motivation level by exam score quartile
+plt.figure(figsize=(10, 6))
+sns.barplot(x='exam_score_quartile', y='motivation_level', data=avg_motivation_by_quartile, palette='viridis')
+plt.title('Average Motivation Level by Exam Score Quartiles')
+plt.xlabel('Exam Score Quartile')
+plt.ylabel('Average Motivation Level')
+plt.ylim(0, 10)
+plt.xticks(rotation=30)
+
+plt.savefig('/mnt/data/average_motivation_by_exam_score_quartiles.png')
+plt.show()
+
+avg_motivation_by_quartile</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code loads student data from a CSV file and divides the exam scores into quartiles by computing quantiles and creating bins accordingly. Because the exam scores have duplicates which cause problems in automatic quartile binning, the code manually computes unique quantiles to form bins and assigns exam scores to these bins. It then groups the data by these quartiles and calculates the mean motivation level for each group. Finally, it visualizes this grouped average motivation level by plotting a bar chart where the x-axis represents exam score quartiles and the y-axis shows the average motivation levels, saving the plot as an image file.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>Load the student dataset from CSV.</li><li>Compute the quantiles (0%, 25%, 50%, 75%, 100%) for the exam_score column to determine bin edges.</li><li>Use these quantile edges to create bins for exam scores manually, ensuring bins are unique to avoid duplication errors.</li><li>Assign each student's exam score to one of these quartile bins.</li><li>Group the data by exam score quartiles and calculate the average motivation level for students within each quartile.</li><li>Plot a bar chart showing average motivation levels by exam score quartiles.</li><li>Interpret the plot to infer business insights regarding the correlation between motivation levels and exam performance.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Top 5 Majors by Average Exam Score</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/d61a5962-15a1-40ec-b939-f3f3b09cae0b_20250609_062403.png" alt="Chart for Top 5 Majors by Average Exam Score" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis identifies the top 5 majors by average exam score, revealing that Computer Science, Engineering, Business, Biology, and Psychology have the highest average exam performance, closely clustered around 89-90 points. This indicates these majors may have motivated student groups or effective teaching practices. Educational institutions can leverage these insights by studying these majors to replicate success in other departments, focusing marketing on these high-achievement areas, and optimizing resource allocation to sustain or enhance academic performance.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv'
+df = pd.read_csv(file_path)
+
+# Calculate average exam scores for each major
+avg_exam_scores_by_major = df.groupby('major')['exam_score'].mean().sort_values(ascending=False).head(5)
+
+# Create a bar chart for the top 5 majors by average exam score
+plt.figure(figsize=(10, 6))
+sns.barplot(x=avg_exam_scores_by_major.values, y=avg_exam_scores_by_major.index, palette='viridis')
+plt.title('Top 5 Majors by Average Exam Score')
+plt.xlabel('Average Exam Score')
+plt.ylabel('Major')
+plt.xlim(0, 100)
+plt.grid(axis='x', linestyle='--', alpha=0.7)
+
+# Save the figure
+chart_path = '/mnt/data/top_5_majors_by_average_exam_score.png'
+plt.savefig(chart_path)
+
+# Show the chart
+plt.show()
+
+chart_path</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code starts by loading the student dataset into a pandas DataFrame. It groups the data by the 'major' column and calculates the mean 'exam_score' for each major. These means are then sorted in descending order to identify the top 5 majors with the highest average exam scores. A horizontal bar chart is generated with seaborn to visually represent these top majors and their average scores, with customization for labels, axis limits, and a grid for readability. The chart is saved as a PNG file and displayed.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The agent first loaded the student dataset to inspect the relevant columns, confirming the availability of major and exam score data. Next, the data was grouped by major and the average exam scores were computed for each group. These averages were then sorted in descending order and the top five majors were selected. The results were visualized using a bar chart to provide an easy interpretation of which majors had the highest average exam scores. Finally, insights were drawn from the visualization to understand academic performance trends across majors and implications for educational strategy and planning.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Bottom 5 Majors by Average Exam Score</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/9a1124bb-fd7c-4533-980c-e3cef20c900a_20250609_062438.png" alt="Chart for Bottom 5 Majors by Average Exam Score" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis identifies the bottom 5 majors with the lowest average exam scores: Arts, Psychology, Biology, Business, and Engineering. These majors have average scores clustered closely around 88.8 to 89.1. This insight indicates a potential need for targeted academic support in these disciplines to improve student outcomes. Academic departments and student support services can use this information to implement interventions such as tutoring or curriculum adjustments to raise exam performance and overall student success.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv'
+df = pd.read_csv(file_path)
+
+# Group by major and calculate the average exam score for each major
+avg_exam_scores = df.groupby('major')['exam_score'].mean().reset_index()
+
+# Identify the bottom 5 majors by average exam score
+bottom_5_majors = avg_exam_scores.nsmallest(5, 'exam_score')
+
+# Plotting the bottom 5 majors by average exam score
+plt.figure(figsize=(10, 6))
+sns.barplot(x='exam_score', y='major', data=bottom_5_majors, palette='viridis')
+plt.title('Bottom 5 Majors by Average Exam Score')
+plt.xlabel('Average Exam Score')
+plt.ylabel('Major')
+plt.xlim(0, 105)  # Score range from 0 to slightly above 100 for better visualization
+plt.grid(axis='x', linestyle='--', alpha=0.7)
+plt.tight_layout()
+
+# Save and show the plot
+plot_path = '/mnt/data/bottom_5_majors_average_exam_score.png'
+plt.savefig(plot_path)
+plt.show()
+
+bottom_5_majors</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The provided code first loads the student dataset using pandas to access the student majors and their exam scores. It groups the data by the 'major' column and calculates the mean exam score for each major to understand average performance levels. Then, using pandas nsmallest method, it extracts the five majors with the lowest average exam scores, which identifies areas of concern. Subsequently, the code uses seaborn and matplotlib libraries to create a horizontal bar plot visualizing these bottom 5 majors alongside their mean exam scores for clear presentation. The plot is customized for readability and saved to an output file before being displayed.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The analyst computed the KPI by initially loading the dataset and confirming it contains the necessary 'major' and 'exam_score' fields. Next, the analyst grouped the dataset by the 'major' attribute and calculated the mean exam score for each group to determine average performance. Then, they identified the bottom five majors by selecting those with the lowest average exam scores. Finally, they created a horizontal bar chart representing these bottom 5 majors and their average exam scores visually to better interpret and communicate the findings. This systematic approach enabled clear identification and visualization of majors needing attention in terms of exam performance.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Average Exam Score by Learning Style</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/e2d22073-0a9a-45b5-ac1e-539c82ae1481_20250609_062507.png" alt="Chart for Average Exam Score by Learning Style" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis investigates the average exam scores of students segmented by their learning styles: Auditory, Kinesthetic, Reading, and Visual. The results indicate that the average exam scores are very similar across all learning styles, all around an average score of 89 out of 100. Kinesthetic learners had the highest average score, though only marginally higher than the others, suggesting no statistically significant difference in exam performance by learning style. From a business perspective, this insight implies that educational programs and resources can continue to be designed to accommodate all learning styles without prioritizing one over another to improve exam outcomes. This inclusive approach ensures balanced investment in diverse teaching methods to support all students effectively.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+data = pd.read_csv('/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv')
+
+# Calculate average exam score by learning style
+avg_exam_score_by_learning_style = data.groupby('learning_style')['exam_score'].mean().reset_index()
+
+# Plotting
+plt.figure(figsize=(10, 6))
+sns.barplot(x='learning_style', y='exam_score', data=avg_exam_score_by_learning_style, palette='viridis')
+plt.title('Average Exam Score by Learning Style')
+plt.xlabel('Learning Style')
+plt.ylabel('Average Exam Score')
+plt.ylim(0, 105)
+plt.xticks(rotation=45)
+plt.tight_layout()
+
+# Save and show the plot
+plt.savefig('/mnt/data/average_exam_score_by_learning_style.png')
+plt.show()
+
+avg_exam_score_by_learning_style</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code first reads the CSV dataset containing student data, including their learning styles and exam scores. It then groups the data by the 'learning_style' column and calculates the mean of 'exam_score' for each group, storing this in a new DataFrame. For visualization, the code generates a bar plot displaying the average exam score for each learning style category with a color palette for clarity. Axis labels and a title are added for readability, and the plot limits are set to appropriately represent exam scores ranging from 0 to 100. Finally, the plot is saved as an image file and displayed to provide a clear visual summary of the comparison between different learning styles.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The analyst began by loading the student performance dataset and inspecting its structure to identify relevant columns such as 'learning_style' and 'exam_score'. They then computed the average exam score for each learning style group using a group-by operation and mean calculation. To communicate the findings effectively, the analyst created a bar chart visualizing these averages, highlighting the similarity in performance across all learning styles. The analyst examined the visual and numerical results, noting the close average scores and inferred no significant advantage for any particular learning style. Based on these findings, they drew business insights suggesting balanced educational approaches for all learning styles.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Average Exam Score by Diet Quality</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/c6c07ccf-d866-4405-ad04-f69a702353f4_20250609_062541.png" alt="Chart for Average Exam Score by Diet Quality" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals that diet quality (categorized as Poor, Fair, Good) does not significantly impact average exam scores among students in the dataset. Average exam scores are consistently high and similar across all diet quality groups, indicating that other factors may have a more substantial effect on exam performance. This suggests that efforts to improve exam scores should potentially focus on factors beyond diet quality alone.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv'
+data = pd.read_csv(file_path)
+
+# Calculate the average exam score by diet quality
+avg_exam_score_by_diet = data.groupby('diet_quality')['exam_score'].mean().reset_index()
+
+# Sort the categories to maintain natural order
+diet_quality_order = ['Poor', 'Fair', 'Good']
+avg_exam_score_by_diet['diet_quality'] = pd.Categorical(avg_exam_score_by_diet['diet_quality'], categories=diet_quality_order, ordered=True)
+avg_exam_score_by_diet = avg_exam_score_by_diet.sort_values('diet_quality')
+
+# Plotting the average exam scores by diet quality
+plt.figure(figsize=(8, 5))
+sns.barplot(x='diet_quality', y='exam_score', data=avg_exam_score_by_diet, palette='viridis')
+plt.title('Average Exam Score by Diet Quality')
+plt.xlabel('Diet Quality')
+plt.ylabel('Average Exam Score')
+plt.ylim(0, 100)
+plt.grid(axis='y')
+
+# Save and display the plot
+plt.savefig('/mnt/data/average_exam_score_by_diet_quality.png')
+plt.show()</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The provided code performs data analysis and visualization to explore the relationship between diet quality and exam scores. It first loads the dataset containing student exam scores and their corresponding diet quality classifications. Then, it calculates the average exam score for each diet quality category by grouping the data. The diet quality categories are ordered to ensure the bar plot reflects a logical progression (Poor to Good). Next, a bar plot is created showing the average exam scores for each diet group using Seaborn for visualization. The plot is titled and labeled appropriately, with y-axis limits set from 0 to 100 to reflect exam score ranges. The plot is saved to a file and displayed.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The analyst loaded the student dataset containing columns 'diet_quality' and 'exam_score'.</li><li>They calculated the mean exam score for each category of diet quality by grouping the data.</li><li>The diet quality categories were explicitly ordered ('Poor', 'Fair', 'Good') to maintain logical sequencing in the visualization.</li><li>A bar plot was generated to visualize average exam scores across these diet quality groups.</li><li>The plot was labeled with titles and axis labels for clarity.</li><li>The plot was saved as an image file and displayed.</li><li>Based on the similar average exam scores across diet quality categories, the analyst concluded that diet quality does not significantly affect exam performance in this dataset.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Average Social Media Hours by Exam Score Bracket</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/1e7cb175-1db4-446f-ba63-2d106b15c2fd_20250609_062616.png" alt="Chart for Average Social Media Hours by Exam Score Bracket" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis investigates how students' average daily time spent on social media varies across different exam score brackets. The key insight is that social media usage remains relatively stable around 2.5 hours daily across all groups ranging from low to high exam scores. This suggests that social media engagement is not strongly associated with academic performance in this dataset. Consequently, any interventions aimed at reducing social media usage should not necessarily target students based on their exam score performance, as the behavior appears consistent across all levels. Further investigation could explore other factors influencing exam performance, such as study habits or time management patterns.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load dataset
+file_path = '/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv'
+data = pd.read_csv(file_path)
+
+# Define exam score brackets
+bins = [0, 60, 70, 80, 90, 100]
+labels = ['0-59', '60-69', '70-79', '80-89', '90-100']
+data['exam_score_bracket'] = pd.cut(data['exam_score'], bins=bins, labels=labels, right=False)
+
+# Calculate average social media hours per bracket
+avg_social_media_hours = data.groupby('exam_score_bracket')['social_media_hours'].mean().reset_index()
+
+# Visualize the result
+plt.figure(figsize=(10, 6))
+sns.barplot(x='exam_score_bracket', y='social_media_hours', data=avg_social_media_hours, palette='viridis')
+plt.title('Average Social Media Hours by Exam Score Bracket')
+plt.xlabel('Exam Score Bracket')
+plt.ylabel('Average Social Media Hours')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.savefig('/mnt/data/average_social_media_hours_by_exam_score_bracket.png')
+plt.show()
+
+avg_social_media_hours</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code first loads the student dataset using pandas. It then categorizes students into five exam score brackets (0-59, 60-69, 70-79, 80-89, and 90-100) using pandas' cut function. After defining these brackets, the code groups the dataset by these categories and computes the mean social media hours for each bracket. Finally, it visualizes these average social media hours per exam score bracket as a bar chart using Seaborn and Matplotlib, and saves the plot for reporting purposes.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>Load the student dataset containing at least 'exam_score' and 'social_media_hours' columns.</li><li>Create categorical exam score brackets to group students by their academic performance.</li><li>Group the data by these score brackets and calculate the average social media hours for each group.</li><li>Plot the results as a bar chart to visually compare social media usage across exam performance brackets.</li><li>Interpret the plot to understand the relationship between exam scores and social media usage, and derive business insights from these observations.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Impact of Access to Tutoring on Exam Score</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/7a9eda4b-60e1-4217-a4c4-b61558b792dc_20250609_062650.png" alt="Chart for Impact of Access to Tutoring on Exam Score" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals that students who have access to tutoring perform better on average in their exams compared to those who do not have such access. This suggests that tutoring has a positive influence on academic performance. From a business standpoint, educational institutions or organizations should consider investing in tutoring services or making such resources more accessible to students to enhance overall student achievement and success rates.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv'
+data = pd.read_csv(file_path)
+
+# Calculate average exam score grouped by access to tutoring
+avg_exam_score_by_tutoring = data.groupby('access_to_tutoring')['exam_score'].mean().reset_index()
+
+# Plot the impact of access to tutoring on exam score
+plt.figure(figsize=(8, 6))
+sns.barplot(x='access_to_tutoring', y='exam_score', data=avg_exam_score_by_tutoring, palette='viridis')
+plt.title('Impact of Access to Tutoring on Exam Score')
+plt.xlabel('Access to Tutoring')
+plt.ylabel('Average Exam Score')
+plt.ylim(0, 110)
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+
+# Save and show the plot
+plt.savefig('/mnt/data/impact_of_tutoring_on_exam_score.png')
+plt.show()</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code first imports necessary libraries including pandas for data manipulation, and matplotlib and seaborn for data visualization. It loads a student dataset from a CSV file. It then groups the data by the 'access_to_tutoring' column and calculates the mean exam score for each group (those with and without tutoring access). These average values are plotted using a bar chart to visually compare exam scores between the two groups. The plot is customized with titles, axis labels, a grid, and color palette, and then saved as an image file before being displayed.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The agent began by loading the dataset to understand its structure and ensure the availability of relevant columns ('access_to_tutoring' and 'exam_score'). Next, the agent computed the average exam scores separately for students with and without access to tutoring by grouping the dataset accordingly. To effectively communicate this comparison, a bar plot was created to visualize the difference in average exam scores between the two groups. From the visualization and computed averages, the agent derived the insight that access to tutoring positively impacts exam performance.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Average Time Management Score by Exam Score</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/12243389-c63e-4d7c-839f-4caa4c7aaad4_20250609_062722.png" alt="Chart for Average Time Management Score by Exam Score" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals that students with higher exam scores generally exhibit stable and relatively consistent average time management scores, around 5.5. For lower exam scores, time management scores fluctuate more, showing some spikes and dips. The stabilization around mid-to-high exam scores suggests good time management is linked to better academic performance. This insight highlights the importance of improving time management skills to support students aiming to improve or maintain high exam scores. Educational institutions could focus on interventions to enhance these skills, potentially boosting overall student performance.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv'
+df = pd.read_csv(file_path)
+
+# Group by exam_score and calculate the average time_management_score
+avg_time_mgmt_by_exam_score = df.groupby('exam_score')['time_management_score'].mean().reset_index()
+
+# Plotting the KPI
+plt.figure(figsize=(12, 6))
+sns.lineplot(data=avg_time_mgmt_by_exam_score, x='exam_score', y='time_management_score', marker='o')
+plt.title('Average Time Management Score by Exam Score')
+plt.xlabel('Exam Score')
+plt.ylabel('Average Time Management Score')
+plt.grid(True)
+plt.tight_layout()
+
+# Save the figure
+chart_path = '/mnt/data/average_time_management_by_exam_score.png'
+plt.savefig(chart_path)
+plt.show()</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code first imports required libraries: pandas for data manipulation, and matplotlib and seaborn for plotting. It reads the student data from a CSV file into a dataframe. It then groups the data by 'exam_score' and computes the average 'time_management_score' for each exam score. After this aggregation, it creates a line plot showing the relationship between exam scores and the average time management scores with markers on each data point for clarity. The plot is titled and axes labeled to clarify the KPI visualized. Finally, the plot is saved as an image file and displayed.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The agent began by loading the student dataset to understand its structure and identify relevant columns. Next, it calculated the KPI by grouping students' exam scores and computing the average time management score for each exam score group. Then, it visualized this KPI through a line plot, enabling visual assessment of trends between exam performance and time management scores. The agent interpreted the plotted data, identifying key patterns such as consistent time management scores for higher exam scores and variability at lower scores, deriving actionable business insights from these patterns.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Comparison of Mental Health Rating vs Exam Score</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/3745ff60-1d67-4146-8106-768123dda801_20250609_062806.png" alt="Chart for Comparison of Mental Health Rating vs Exam Score" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis explores the relationship between students' mental health ratings and their exam scores. Findings indicate that while a strong linear correlation is not evident, higher mental health ratings tend to associate with higher exam scores. Students with better mental health ratings (around 7 to 10) generally achieve higher exam scores, suggesting that mental wellbeing can positively influence academic performance. This insight supports the idea that initiatives aimed at improving students' mental health could contribute to better academic outcomes, although other factors also influence performance and should be examined further.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = "/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv"
+data = pd.read_csv(file_path)
+
+# Extract relevant columns for the KPI analysis
+kpi_data = data[['mental_health_rating', 'exam_score']]
+
+# Summary statistics
+kpi_summary = kpi_data.describe()
+
+# Scatter plot to visualize mental health rating vs exam score
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x='mental_health_rating', y='exam_score', data=kpi_data, alpha=0.6)
+plt.title('Comparison of Mental Health Rating vs Exam Score')
+plt.xlabel('Mental Health Rating')
+plt.ylabel('Exam Score')
+plt.grid(True)
+plt.savefig('/mnt/data/mental_health_vs_exam_score.png')
+plt.show()
+
+kpi_summary</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code begins by importing necessary libraries: pandas for data manipulation, matplotlib and seaborn for visualization. It loads the data from a specified CSV path. It then selects the two relevant columns — mental_health_rating and exam_score — for the key performance indicator (KPI) analysis. Summary statistics are computed to understand data distribution and central tendencies for these columns. Subsequently, a scatter plot is generated using Seaborn to visualize any trends or relationships between mental health ratings and exam scores among students. The plot is saved to a PNG file and displayed. Finally, the code outputs the summary statistics for further inspection.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>Load the dataset from the given CSV file.</li><li>Identify and extract columns relevant to KPIs: 'mental_health_rating' and 'exam_score'.</li><li>Calculate summary statistics to understand basic descriptive measures for these two variables.</li><li>Create a scatter plot to visually explore the relationship between mental health ratings and exam scores.</li><li>Analyze the scatter plot and summary statistics to draw insights about any correlation or trends.</li><li>Save the plot for reference and optionally conduct further analyses if needed.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Relationship between Exercise Frequency and Exam Score</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/14225d9f-89a5-48fd-b311-298cae11b964_20250609_062840.png" alt="Chart for Relationship between Exercise Frequency and Exam Score" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals a positive correlation between exercise frequency and exam scores among students. Increasing the number of times students exercise weekly is associated with higher average exam scores. This insight suggests that promoting regular physical activity could enhance academic performance by potentially improving cognitive function, reducing stress, or boosting overall well-being. Educational institutions might leverage this finding to integrate wellness programs focused on physical exercise to foster better academic outcomes.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+
+# Load the dataset
+file_path = '/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv'
+df = pd.read_csv(file_path)
+
+# Display basic information and first few rows to understand the data
+df.info(), df.head()
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Calculate average exam score for each exercise frequency
+exercise_exam_score = df.groupby('exercise_frequency')['exam_score'].mean().reset_index()
+
+# Plot the relationship
+plt.figure(figsize=(10, 6))
+sns.lineplot(data=exercise_exam_score, x='exercise_frequency', y='exam_score', marker='o')
+plt.title('Average Exam Score by Exercise Frequency')
+plt.xlabel('Exercise Frequency (times per week)')
+plt.ylabel('Average Exam Score')
+plt.grid(True)
+plt.savefig('/mnt/data/exercise_frequency_vs_exam_score.png')
+plt.show()</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The provided Python code starts by loading a student dataset from a CSV file into a pandas DataFrame. It then displays basic information and the first few rows to understand the dataset structure. The code groups the data by the number of times students exercise per week, calculating the mean exam score for each exercise frequency group. Using seaborn and matplotlib libraries, it plots a line chart illustrating how average exam scores change with increasing exercise frequency. The chart is saved as a PNG file and displayed to visualize the relationship clearly.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The agent began by loading the dataset and inspecting its structure to identify relevant columns, specifically 'exercise_frequency' and 'exam_score'. Then, the agent computed the key performance indicator (KPI) by grouping the dataset by exercise frequency and calculating the average exam score for each group. This allowed quantification of the relationship between exercise habits and academic performance. Finally, the agent visualized this relationship through a line plot showing the trend of average exam scores as exercise frequency increases, highlighting the positive correlation between these variables.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Average Previous GPA by Major</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/3a88fd26-1bc1-4824-aabd-8520a3ae3c2a_20250609_062914.png" alt="Chart for Average Previous GPA by Major" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals that students across various majors exhibit relatively consistent academic preparedness, as indicated by their average previous GPA. Computer Science majors have a slightly higher average GPA, suggesting potentially more competitive admissions or better academic readiness in that field. This insight can help educational institutions tailor admission strategies and support services according to the preparedness level of students in each major.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = "/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv"
+df = pd.read_csv(file_path)
+
+# Calculate the average previous GPA by major
+avg_gpa_by_major = df.groupby('major')['previous_gpa'].mean().sort_values(ascending=False)
+
+# Plot the average previous GPA by major
+plt.figure(figsize=(12, 6))
+sns.barplot(x=avg_gpa_by_major.index, y=avg_gpa_by_major.values, palette='viridis')
+plt.xticks(rotation=45, ha='right')
+plt.title('Average Previous GPA by Major')
+plt.xlabel('Major')
+plt.ylabel('Average Previous GPA')
+plt.tight_layout()
+plt.savefig('/mnt/data/average_previous_gpa_by_major.png')
+plt.show()</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code begins by importing the necessary libraries: pandas for data manipulation, matplotlib, and seaborn for visualization. It then reads a CSV file containing student data into a DataFrame. Next, it groups the data by the 'major' column and calculates the mean of the 'previous_gpa' for each group, sorting the results in descending order. Finally, the code creates a bar plot to display the average previous GPA for each major with appropriate labels and saves the visualization as an image file.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The analyst computed the KPI 'Average Previous GPA by Major' by first loading the student dataset to understand the data structure. They grouped the dataset by the 'major' attribute and computed the mean value of 'previous_gpa' for each major group. The averages were sorted in descending order to identify majors with the highest and lowest average GPAs. To facilitate comparison and interpretation, the analyst visualized these averages in a bar chart, labeling axes and providing a title. This visual helped in deriving insights about academic preparedness across majors.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Distribution of Exam Scores by Study Environment</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/262a2bdd-4067-4aff-ad5d-a974744b5cb0_20250609_062951.png" alt="Chart for Distribution of Exam Scores by Study Environment" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals differences in student exam performance based on the type of study environment. Students studying in quiet, focused environments like a 'Quiet Room' tend to have higher median exam scores and less variability, indicating consistent performance. Environments such as 'Co-Learning Group' and 'Library' also support relatively high median scores but with more score variability. Conversely, studying in 'Dorm' environments is associated with lower median exam scores and a wider score range, suggesting less consistent or poorer performance. The 'Cafe' setting has intermediate performance metrics. These insights suggest that study environments that minimize distractions and noise could positively impact academic outcomes. Educational institutions and students can use this information to optimize study spaces and strategies to enhance exam results.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv'
+df = pd.read_csv(file_path)
+
+# Display dataset overview
+df.info(), df.head()
+
+# Set up the plot style
+sns.set(style="whitegrid")
+
+# Plot the distribution of exam scores by study environment
+plt.figure(figsize=(14, 8))
+plot = sns.boxplot(x='study_environment', y='exam_score', data=df)
+plt.title('Distribution of Exam Scores by Study Environment', fontsize=16)
+plt.xlabel('Study Environment', fontsize=14)
+plt.ylabel('Exam Score', fontsize=14)
+plt.xticks(rotation=45)
+plt.tight_layout()
+
+# Save and show the plot
+plot_filename = '/mnt/data/exam_scores_by_study_environment.png'
+plt.savefig(plot_filename)
+plt.show()</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The provided code initiates by importing necessary libraries: pandas for data handling and matplotlib plus seaborn for visualization. It reads the student dataset CSV file into a DataFrame and provides a summary and preview to understand data structure. For the KPI analysis, it uses seaborn's boxplot to visualize exam score distributions categorized by the 'study_environment'. The plot is styled for clarity with rotated x-axis labels for readability, titled appropriately, and sized for better presentation. Finally, the plot is saved as a PNG file and displayed.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The agent first loaded the student dataset and explored its structure to confirm key columns related to the KPI: 'study_environment' and 'exam_score'. Next, it grouped the data by 'study_environment' and created a boxplot to show the distribution of exam scores for each category. The boxplot captures median scores, variability, and outliers, highlighting differences in exam performance. From this visualization, the agent inferred that quieter study environments correspond to higher, more consistent exam scores, whereas more social or less quiet environments relate to lower and more variable scores. These findings were interpreted in the context of educational impact and communicated as clear business insights.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Average Parental Support Level by Exam Score</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/5f80851d-5190-44cc-a7dc-1c0c538950ed_20250609_063027.png" alt="Chart for Average Parental Support Level by Exam Score" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals that the average parental support level is generally moderate to high and remains relatively stable across various exam score ranges from around 50 to 100. This suggests that students with higher exam scores tend to have consistent parental support. There are some fluctuations in parental support for very low exam scores (below 50), which may be less reliable due to fewer data points. The business insight here is that parental support correlates with better exam performance, indicating that educational institutions and policymakers could focus on enhancing parental involvement to potentially improve student outcomes.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv'
+df = pd.read_csv(file_path)
+
+# Group data by exam score and calculate average parental support level
+avg_parental_support_by_exam_score = df.groupby('exam_score')['parental_support_level'].mean().reset_index()
+
+# Plotting the KPI: Average Parental Support Level by Exam Score
+plt.figure(figsize=(12, 6))
+sns.lineplot(data=avg_parental_support_by_exam_score, x='exam_score', y='parental_support_level', marker='o', color='b')
+plt.title('Average Parental Support Level by Exam Score')
+plt.xlabel('Exam Score')
+plt.ylabel('Average Parental Support Level')
+plt.grid(True)
+plt.tight_layout()
+
+# Save and show the plot
+plot_path = '/mnt/data/avg_parental_support_by_exam_score.png'
+plt.savefig(plot_path)
+plt.show()
+
+plot_path</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code first imports necessary libraries such as pandas for data handling, and matplotlib and seaborn for data visualization. It loads the student dataset from a specified file path into a DataFrame. Then, it groups the data by 'exam_score' and calculates the mean of 'parental_support_level' for each exam score. The resulting grouped data is used to create a line plot showing how average parental support varies with exam score. The plot is customized with titles, labels, and grid, saved locally, then displayed.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The agent began by loading the students dataset into a DataFrame to explore the data. The key step to compute the KPI was grouping the dataset by exam scores and computing the average parental support level per exam score group. This aggregation provides a direct measure of the typical parental support level associated with each exam score. The agent then visualized this KPI by plotting a line chart, which helps identify trends or patterns in parental support relative to student exam performance. The resulting visualization and descriptive analysis enabled drawing insights about the relationship between parental support and exam scores.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Average Screen Time by Exam Score Bracket</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/77f21c4d-4e32-4228-a180-1e805ebb0c31_20250609_063056.png" alt="Chart for Average Screen Time by Exam Score Bracket" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals that students with higher exam score brackets tend to have higher average screen time. Specifically, the average screen time increases progressively across the exam score brackets from '0-59' up to '90-100'. This suggests a positive correlation between the amount of screen time and exam performance. From a business or educational perspective, this insight highlights that screen time could be linked to academic success, potentially due to students using digital tools and resources for studying. Educational programs could leverage this by promoting effective screen time habits to boost student outcomes, while also maintaining a balance with other health factors like sleep and physical exercise.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = "/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv"
+df = pd.read_csv(file_path)
+
+# Define exam score brackets (bins)
+bins = [0, 60, 70, 80, 90, 100]
+labels = ['0-59', '60-69', '70-79', '80-89', '90-100']
+
+# Create a new column for score brackets
+df['exam_score_bracket'] = pd.cut(df['exam_score'], bins=bins, labels=labels, right=False)
+
+# Calculate average screen time for each exam score bracket
+avg_screen_time_by_bracket = df.groupby('exam_score_bracket')['screen_time'].mean().reset_index()
+
+# Plot the results
+plt.figure(figsize=(10, 6))
+sns.barplot(data=avg_screen_time_by_bracket, x='exam_score_bracket', y='screen_time', palette='viridis')
+plt.title('Average Screen Time by Exam Score Bracket')
+plt.xlabel('Exam Score Bracket')
+plt.ylabel('Average Screen Time (hours)')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.show()</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The provided code first imports necessary libraries: pandas for data handling, matplotlib and seaborn for visualization. It loads the student dataset from a CSV file into a DataFrame. Exam scores are then categorized into defined score brackets (bins) such as '0-59', '60-69', up to '90-100' using pandas' cut function, creating a new column for these brackets. The code calculates the mean screen time for students within each bracket by grouping the data accordingly. Finally, it visualizes these average screen times across the brackets using a bar chart, applying aesthetic customizations to enhance readability and insight extraction.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>Load the student dataset containing exam scores and screen time.</li><li>Define exam score brackets to segment students into distinct groups based on their exam score ranges.</li><li>Create a new DataFrame column classifying each student's exam score into one of these brackets.</li><li>Compute the average screen time for each exam score bracket by grouping and averaging.</li><li>Generate a bar chart to visualize the average screen time across the different exam score brackets to identify trends and relationships.</li><li>Interpret the visualization to extract business insights about the correlation between screen time and exam performance.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Average Sleep Hours by Exam Score</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/85923a09-51d1-491c-859c-3d6a3ca86437_20250609_063136.png" alt="Chart for Average Sleep Hours by Exam Score" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals a positive correlation between students' average sleep hours and their exam scores. Students who score higher on exams tend to have more sleep on average, which suggests that adequate sleep may be an important factor in academic performance. From a business perspective, educational institutions can leverage these insights by promoting healthy sleep habits and sleep hygiene education among students to potentially improve exam outcomes and overall academic success.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv'
+data = pd.read_csv(file_path)
+
+# Group by exam_score and calculate the average sleep_hours
+sleep_by_exam_score = data.groupby('exam_score')['sleep_hours'].mean().reset_index()
+
+# Sorting by exam_score to maintain the order in the visualization
+sleep_by_exam_score = sleep_by_exam_score.sort_values('exam_score')
+
+# Visualization
+plt.figure(figsize=(12, 6))
+sns.lineplot(data=sleep_by_exam_score, x='exam_score', y='sleep_hours', marker='o')
+plt.title('Average Sleep Hours by Exam Score')
+plt.xlabel('Exam Score')
+plt.ylabel('Average Sleep Hours')
+plt.grid(True)
+
+# Save the plot as an image file
+plot_path = '/mnt/data/average_sleep_hours_by_exam_score.png'
+plt.savefig(plot_path)
+
+plt.show()</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code begins by importing the necessary libraries such as pandas for data manipulation and matplotlib and seaborn for visualization. It loads the student data from a CSV file into a DataFrame. It then groups the data by 'exam_score' to calculate the mean of 'sleep_hours' for each exam score, which forms the basis of the KPI analysis. The grouped data is sorted by exam score to ensure the visualization's x-axis is orderly. Finally, it creates a line plot showing the relationship between exam scores and average sleep hours, adding titles and axis labels before saving and displaying the plot.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>First, the agent loaded the dataset containing student-related attributes including exam scores and sleep hours. Next, it grouped the data by exam scores and computed the average sleep hours for each score group. Then, it sorted the results by exam score for orderly visualization. Finally, the agent generated and saved a line plot that shows the trend of average sleep hours across different exam scores, enabling the observation of the relationship and providing business insights.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Average Exam Score by Parental Education Level</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/1b2b9b5c-9ff1-4f64-9771-5a7c90eb843b_20250609_063203.png" alt="Chart for Average Exam Score by Parental Education Level" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis indicates that higher parental education levels are associated with slightly better average exam scores among students. Specifically, students with parents holding a PhD have the highest average scores, followed by those with parents having a Master's degree. Those with parental education levels including High School, Bachelor, or Some College also demonstrate fairly high averages, though marginally lower. This correlation suggests that parental education may positively influence student academic outcomes, potentially through factors like parental support, expectations, or resource access. Educational institutions can leverage this insight by customizing their communication and support programs to families based on parental education level to enhance student performance.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset to inspect it
+file_path = '/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv'
+data = pd.read_csv(file_path)
+
+# Calculate average exam score by parental education level
+avg_exam_scores = data.groupby('parental_education_level')['exam_score'].mean().reset_index()
+
+# Sort by average exam scores for better visualization
+avg_exam_scores = avg_exam_scores.sort_values(by='exam_score', ascending=False)
+
+# Plotting
+plt.figure(figsize=(12, 6))
+sns.barplot(x='parental_education_level', y='exam_score', data=avg_exam_scores, palette='viridis')
+plt.title('Average Exam Score by Parental Education Level')
+plt.xlabel('Parental Education Level')
+plt.ylabel('Average Exam Score')
+plt.xticks(rotation=45)
+plt.tight_layout()
+
+# Save and show plot
+plt.savefig('/mnt/data/avg_exam_score_by_parental_education_level.png')
+plt.show()</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code begins by importing necessary libraries including pandas for data manipulation, matplotlib and seaborn for data visualization. It reads the student dataset from a specified CSV file path into a pandas dataframe. It then groups the data by 'parental_education_level' and computes the mean exam score within each group to find the average exam score per parental education level. After calculating these averages, the dataset is sorted by exam score values in descending order to improve clarity in the subsequent visualization. A bar plot is created to display the average exam scores across different parental education levels using seaborn’s barplot function, followed by labeling and formatting enhancements for readability. Finally, the plot is saved as an image file and displayed.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>First, the agent loaded the student dataset and reviewed its structure and columns. Then, the agent selected the key variables: 'parental_education_level' and 'exam_score'. The next step involved grouping the dataset by 'parental_education_level' and calculating the mean exam score of students in each group to compute the KPI—average exam score by parental education. After calculating these averages, the results were sorted in descending order to facilitate better visualization. Finally, the agent visualized the KPI using a bar chart and provided interpretation: students with higher parental education tend to have slightly higher average exam scores, highlighting a potential impact of parental education on student academic performance.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Average Exam Score by Internet Quality</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/2cc17457-90b9-40b9-8726-46e8b59088b7_20250609_063317.png" alt="Chart for Average Exam Score by Internet Quality" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis explored the relationship between students' internet quality and their average exam scores, categorized into Low, Medium, and High internet quality. The findings show that the average exam scores across these internet quality levels are very close, around 89.1 to 89.2, indicating that internet quality does not significantly affect exam performance in this data set. This suggests that factors other than internet quality may play more crucial roles in determining academic success. Educational institutions might focus on other influences like study habits or access to learning resources to improve outcomes.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv'
+df = pd.read_csv(file_path)
+
+# Calculate the average exam score by internet quality
+avg_exam_score_by_internet_quality = df.groupby('internet_quality')['exam_score'].mean().reset_index()
+
+# Define proper order for categories
+quality_order = ['Low', 'Medium', 'High']
+avg_exam_score_by_internet_quality['internet_quality'] = pd.Categorical(avg_exam_score_by_internet_quality['internet_quality'], categories=quality_order, ordered=True)
+avg_exam_score_by_internet_quality = avg_exam_score_by_internet_quality.sort_values('internet_quality')
+
+# Plotting
+plt.figure(figsize=(8,5))
+sns.barplot(x='internet_quality', y='exam_score', data=avg_exam_score_by_internet_quality, palette='viridis')
+plt.title('Average Exam Score by Internet Quality')
+plt.xlabel('Internet Quality')
+plt.ylabel('Average Exam Score')
+plt.ylim(0, 105)
+
+# Save and show plot
+plot_path = '/mnt/data/average_exam_score_by_internet_quality.png'
+plt.savefig(plot_path)
+plt.show()
+
+avg_exam_score_by_internet_quality</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code begins by importing necessary libraries: pandas for data handling, matplotlib and seaborn for visualization. It loads a CSV dataset into a DataFrame. The code then groups the data by the 'internet_quality' column and calculates the mean exam score for each category ('Low', 'Medium', 'High'). The categories are ordered logically for plotting. Next, it creates a bar plot visualizing the average exam scores for each internet quality level, adds titles and labels, sets y-axis limits for better perspective, saves the plot as a PNG file, and finally displays it. The DataFrame with average scores by internet quality is returned for review.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>Load student data from CSV file.</li><li>Group data by 'internet_quality' and compute mean 'exam_score' for each group.</li><li>Set internet quality categories order to ensure consistent plotting.</li><li>Sort the grouped results by this order.</li><li>Generate a bar plot showing average exam scores for each internet quality category.</li><li>Save the plot as an image file.</li><li>Display the plot for visual inspection.</li><li>Interpret the results by comparing the average scores by internet quality to assess impact on performance.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Average Exam Score by Extracurricular Participation</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <div class="no-chart">📊 No visualization available</div>
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The business insight derived from this analysis is that students who participate in extracurricular activities tend to have a different average exam score compared to those who do not. By comparing these averages, the school or educational institution can assess whether encouraging involvement in extracurriculars supports better academic performance. If the data shows higher average exam scores for participants, it suggests a beneficial link, potentially guiding policies to promote holistic student development through extracurricular engagement. Conversely, if no significant difference or a negative impact is observed, resources might be redirected to focus more on academic study time. This KPI provides actionable insights into the impact of extracurricular participation on student academic outcomes.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load dataset
+file_path = '/mnt/data/1889a9053f52541f5331cc640980f6a5-b411cb00-0e36-4670-98f7-00fa3381ab82_20250609_061208_students.csv'
+df = pd.read_csv(file_path)
+
+# Calculate the average exam score by extracurricular participation
+grouped_avg_score = df.groupby('extracurricular_participation')['exam_score'].mean().reset_index()
+
+# Plot the results
+plt.figure(figsize=(8, 5))
+sns.barplot(data=grouped_avg_score, x='extracurricular_participation', y='exam_score', palette='viridis')
+plt.title('Average Exam Score by Extracurricular Participation')
+plt.xlabel('Extracurricular Participation')
+plt.ylabel('Average Exam Score')
+plt.ylim(0, 100)  # Assuming exam_score range is 0-100
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+
+# Save and display the plot
+chart_path = '/mnt/data/average_exam_score_by_extracurricular_participation.png'
+plt.savefig(chart_path)
+plt.show()
+</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code begins by importing necessary libraries for data manipulation (pandas) and visualization (matplotlib and seaborn). It then loads the dataset containing student records. The key operation is grouping the data by the column 'extracurricular_participation' to calculate the mean 'exam_score' for students who participate and those who do not. This grouped average is reset into a DataFrame for convenience. Next, the code visualizes the average exam scores using a bar plot, with clear labels and a defined y-axis limit to reflect exam score ranges. The grid enhances readability, and the plot is saved to a PNG file before being displayed.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>Load the student dataset to access exam scores and extracurricular participation data.</li><li>Identify the two groups based on extracurricular participation status (Yes/No).</li><li>Compute the average exam score for each group using group-by and mean operations.</li><li>Create a bar chart to visually compare these average scores side by side.</li><li>Add titles, axis labels, and grid for clarity.</li><li>Save the plot image to a file for reporting or presentation.</li><li>Interpret the plot to understand the relationship between extracurricular participation and academic performance.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                </div>
+            </div>
+        </main>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="color: var(--success);">✅</span>
+                        <span>Analysis Complete</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="color: var(--primary);">🤖</span>
+                        <span>AI Powered</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="color: var(--accent);">⚡</span>
+                        <span>Real-time Processing</span>
+                    </div>
+                </div>
+                <p>&copy; 2025 Deep Analysis Platform • Advanced AI Analytics Engine</p>
+                <p style="margin-top: 0.5rem; font-size: 0.875rem; opacity: 0.8;">
+                    🧠 Intelligent insights delivered by our AI agent
+                </p>
+            </div>
+        </footer>
+        
+        <script>
+            // Enhanced interactions and AI-like loading effects
+            document.addEventListener('DOMContentLoaded', function() {
+                // Simulate AI processing completion
+                setTimeout(() => {
+                    document.body.classList.add('analysis-complete');
+                }, 500);
+                
+                // Progressive card loading with AI feel
+                const cards = document.querySelectorAll('.kpi-card');
+                cards.forEach((card, index) => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(50px) scale(0.95)';
+                    
+                    setTimeout(() => {
+                        card.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0) scale(1)';
+                        
+                        // Add completion checkmark
+                        setTimeout(() => {
+                            const header = card.querySelector('.kpi-header h3');
+                            if (header && !header.querySelector('.completion-check')) {
+                                const check = document.createElement('span');
+                                check.className = 'completion-check';
+                                check.innerHTML = '✅';
+                                check.style.marginLeft = 'auto';
+                                check.style.fontSize = '1.2rem';
+                                check.style.opacity = '0';
+                                check.style.transform = 'scale(0)';
+                                check.style.transition = 'all 0.3s ease';
+                                header.appendChild(check);
+                                
+                                setTimeout(() => {
+                                    check.style.opacity = '1';
+                                    check.style.transform = 'scale(1)';
+                                }, 100);
+                            }
+                        }, 400);
+                    }, index * 200 + 300);
+                });
+                
+                // Enhanced code section interactions
+                const codeHeaders = document.querySelectorAll('.code-header');
+                codeHeaders.forEach(header => {
+                    header.style.cursor = 'pointer';
+                    header.style.transition = 'all 0.3s ease';
+                    
+                    header.addEventListener('mouseenter', function() {
+                        this.style.background = '#475569';
+                        this.style.transform = 'translateX(5px)';
+                    });
+                    
+                    header.addEventListener('mouseleave', function() {
+                        this.style.background = '#334155';
+                        this.style.transform = 'translateX(0)';
+                    });
+                    
+                    header.addEventListener('click', function() {
+                        const content = this.nextElementSibling;
+                        const isHidden = content.style.display === 'none';
+                        
+                        content.style.transition = 'all 0.3s ease';
+                        
+                        if (isHidden) {
+                            content.style.display = 'block';
+                            content.style.opacity = '0';
+                            content.style.transform = 'translateY(-10px)';
+                            this.innerHTML = '💻 Python Code (Click to collapse)';
+                            
+                            setTimeout(() => {
+                                content.style.opacity = '1';
+                                content.style.transform = 'translateY(0)';
+                            }, 10);
+                        } else {
+                            content.style.opacity = '0';
+                            content.style.transform = 'translateY(-10px)';
+                            this.innerHTML = '💻 Python Code (Click to expand)';
+                            
+                            setTimeout(() => {
+                                content.style.display = 'none';
+                            }, 300);
+                        }
+                    });
+                    
+                    // Initialize as collapsed
+                    header.innerHTML = '💻 Python Code (Click to expand)';
+                    header.nextElementSibling.style.display = 'none';
+                });
+                
+                // Add scroll-triggered animations
+                const observerOptions = {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -50px 0px'
+                };
+                
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.animation = 'fadeInUp 0.6s ease-out forwards';
+                        }
+                    });
+                }, observerOptions);
+                
+                document.querySelectorAll('.content-section').forEach(section => {
+                    observer.observe(section);
+                });
+                
+                // Add typing effect to AI insights
+                const summaryText = document.querySelector('.business-analysis');
+                if (summaryText) {
+                    summaryText.style.position = 'relative';
+                    summaryText.style.overflow = 'hidden';
+                    
+                    const cursor = document.createElement('span');
+                    cursor.innerHTML = '|';
+                    cursor.style.animation = 'blink 1s infinite';
+                    cursor.style.color = 'var(--primary)';
+                    cursor.style.fontWeight = 'bold';
+                    
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        @keyframes blink {
+                            0%, 50% { opacity: 1; }
+                            51%, 100% { opacity: 0; }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                    
+                    setTimeout(() => {
+                        summaryText.appendChild(cursor);
+                        setTimeout(() => cursor.remove(), 3000);
+                    }, 1000);
+                }
+            });
+        </script>
+    </body>
+    </html>
+    
