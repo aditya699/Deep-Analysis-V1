@@ -12,7 +12,7 @@ from azure.storage.blob.aio import BlobServiceClient
 from app.core.config import settings
 from app.db.mongo import log_error
 from app.chat.schemas import UploadCSVResponse, ChatResponse, SmartQuestions
-from app.container.utils import get_all_active_containers, upload_file_to_container
+from app.container.utils import get_all_active_containers, upload_file_to_container, create_new_container
 import base64
 from azure.storage.blob import BlobBlock
 from app.llm.openai_client import get_openai_client
@@ -31,7 +31,7 @@ async def deep_analysis(
         session_id: str,
         current_user: dict = Depends(get_current_user),
         db: Database = Depends(get_db),
-        container_id: str = Depends(get_all_active_containers),
+        container_id: str = Depends(create_new_container),
         openai_client: OpenAI = Depends(get_openai_client),
         blob_client: BlobServiceClient = Depends(get_blob_client)
 ):
