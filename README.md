@@ -1,54 +1,39 @@
 # Deep Analysis V1
 
-A powerful AI-driven chat and data analysis platform that combines natural language processing with advanced data insights. This system enables intelligent conversations while processing and analyzing data in real-time.
+A powerful AI-driven data analysis platform powered by specialized agents that combine intelligent chat capabilities with automated deep data analysis. This system enables users to interact with their data through natural language while providing comprehensive automated analysis through a team of specialized AI agents.
 
-## 🚀 Core Capabilities
+## 🎯 Core Features
 
-- **Intelligent Chat System**: 
-  - Natural language conversations with AI
-  - Context-aware responses
-  - Real-time data analysis during conversations
-  - Multi-turn dialogue support
+### 🤖 Deep Analysis Agent
+- **Manager Agent**: Intelligent identification and prioritization of key performance indicators from your data
+- **Analyst Agent**: Automated analysis and visualization generation for each KPI
+- **Business Agent**: Detailed business analysis with actionable insights
+- **Code Agent**: Automated Python code generation and execution for data analysis
+- **Report Agent**: Beautiful HTML report generation with dynamic visualizations and insights
 
-- **Data Analysis Features**:
-  - Real-time data processing
-  - Pattern recognition
-  - Insight generation
-  - Data visualization capabilities
-  - Custom analysis workflows
+### 💬 Chat Agent System
+- **Query Agent**: Natural language understanding and processing of user questions
+- **Context Agent**: Maintains conversation context and history for better understanding
+- **Smart Questions Agent**: Suggests relevant questions to explore your data
+- **Code Interpreter Agent**: Handles code generation and execution for complex queries
+- **Visualization Agent**: Creates and manages charts, tables, and other visualizations
+- **Feedback Agent**: Processes user feedback to improve future interactions
 
-- **Advanced Features**:
-  - **Authentication System**: Secure user management and access control
-  - **Session Management**: Track and manage user sessions
-  - **LLM Integration**: OpenAI integration for advanced language processing
-  - **MongoDB Database**: Robust data storage and retrieval
-  - **Container Support**: Docker containerization for easy deployment
-  - **API Documentation**: Auto-generated API documentation with FastAPI
+## 🛠️ Technical Features
 
-## 🚀 Features
-
-- **Authentication System**: Secure user management and access control
-- **Chat Interface**: Interactive communication system with AI capabilities
-- **Session Management**: Track and manage user sessions
-- **LLM Integration**: OpenAI integration for advanced language processing
-- **MongoDB Database**: Robust data storage and retrieval
+- **True Streaming**: Efficient file processing without storing full content in memory
+- **Azure Integration**: Secure file storage and management
+- **MongoDB**: Robust session and data management
+- **OpenAI Integration**: Advanced language model capabilities for agent operations
 - **Container Support**: Docker containerization for easy deployment
 - **API Documentation**: Auto-generated API documentation with FastAPI
-
-## 🛠️ Tech Stack
-
-- **Backend Framework**: FastAPI
-- **Database**: MongoDB
-- **AI Integration**: OpenAI
-- **Containerization**: Docker
-- **Authentication**: Custom auth system
-- **API Documentation**: Swagger/OpenAPI
 
 ## 📋 Prerequisites
 
 - Python 3.8+
 - MongoDB
 - OpenAI API Key
+- Azure Storage Account
 - Docker (optional)
 
 ## 🚀 Getting Started
@@ -75,34 +60,19 @@ cp .env.example .env
 uvicorn app.main:app --reload
 ```
 
-## 🔧 API Documentation
-
-Once the application is running, you can access the API documentation at:
-- Swagger UI: `http://localhost:8000/docs`
-- ReDoc: `http://localhost:8000/redoc`
-
-
 ## 📁 Project Structure
 
 ```
 app/
-├── auth/         # Authentication related code
-├── chat/         # Chat functionality
+├── auth/         # Authentication system
+├── chat/         # Chat agent system and message handling
 ├── container/    # Docker configuration
 ├── core/         # Core application logic
-├── db/           # Database related code
+├── db/           # Database operations
+├── deep_analysis/# Deep analysis agent system
 ├── llm/          # Language model integration
-├── sessions/     # Session management
-└── tests/        # Test suite
+└── sessions/     # Session management
 ```
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📝 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## 🔐 Security
 
