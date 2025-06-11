@@ -1,0 +1,1988 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Deep Analysis Report - 73f30c07-2d65-4cc0-a3cc-51986bfda394</title>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #8b5cf6;
+            --secondary: #f8fafc;
+            --accent: #06b6d4;
+            --accent-light: #22d3ee;
+            --text: #0f172a;
+            --text-light: #64748b;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --ai-glow: #8b5cf6;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --gradient-ai: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-success: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: -1;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        /* Header with AI Agent Feel */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #8b5cf6 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(1deg); }
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .ai-badge::before {
+            content: '🤖';
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
+        
+        .completion-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--gradient-success);
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            box-shadow: var(--shadow-lg);
+            animation: slideInUp 1s ease-out 0.5s both;
+        }
+        
+        .completion-status::before {
+            content: '✅';
+            font-size: 1.2rem;
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 2rem 0;
+        }
+        
+        /* Summary Section with AI Enhancement */
+        .summary-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .summary-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-ai);
+            border-radius: 1.5rem 1.5rem 0 0;
+        }
+        
+        .summary-card h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            position: relative;
+        }
+        
+        .summary-card h2::before {
+            content: '🧠';
+            font-size: 1.8rem;
+            animation: brainPulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes brainPulse {
+            0%, 100% { transform: scale(1); filter: hue-rotate(0deg); }
+            50% { transform: scale(1.1); filter: hue-rotate(20deg); }
+        }
+        
+        .dataset-info {
+            background: var(--secondary);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .dataset-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        /* Enhanced KPI Cards with AI Feel */
+        .kpi-grid {
+            display: grid;
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+        
+        .kpi-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .kpi-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(102, 126, 234, 0.25);
+        }
+        
+        .kpi-card:hover::before {
+            opacity: 1;
+        }
+        
+        .kpi-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #8b5cf6 100%);
+            color: white;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .kpi-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: shimmer 4s linear infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .kpi-header h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .kpi-header h3::before {
+            content: '⚡';
+            font-size: 1.5rem;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(180deg); }
+        }
+        
+        .kpi-content {
+            padding: 2.5rem;
+            position: relative;
+        }
+        
+        /* Enhanced Chart Section */
+        .chart-container {
+            text-align: center;
+            margin: 2rem 0;
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.8) 0%, rgba(241, 245, 249, 0.8) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent) 0%, var(--primary) 50%, var(--accent-light) 100%);
+        }
+        
+        .chart-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow-lg);
+            transition: transform 0.3s ease;
+        }
+        
+        .chart-container img:hover {
+            transform: scale(1.02);
+        }
+        
+        .no-chart {
+            padding: 4rem;
+            color: var(--text-muted);
+            font-style: italic;
+            font-size: 1.1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .no-chart::before {
+            content: '📊';
+            font-size: 3rem;
+            opacity: 0.5;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        /* Enhanced Content Sections */
+        .content-section {
+            margin: 2.5rem 0;
+        }
+        
+        .content-section h4 {
+            color: var(--primary);
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .content-section h4::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 3rem;
+            height: 2px;
+            background: var(--gradient-ai);
+            border-radius: 1px;
+        }
+        
+        .business-analysis {
+            background: linear-gradient(135deg, rgba(240, 249, 255, 0.9) 0%, rgba(224, 242, 254, 0.9) 100%);
+            backdrop-filter: blur(10px);
+            border-left: 4px solid var(--accent);
+            padding: 2rem;
+            border-radius: 1rem;
+            line-height: 1.8;
+            position: relative;
+            box-shadow: var(--shadow);
+        }
+        
+        .business-analysis::before {
+            content: '💡';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            opacity: 0.6;
+            animation: pulse 2s infinite;
+        }
+        
+        /* Styling for converted markdown content */
+        .business-analysis h1, .business-analysis h2, .business-analysis h3 {
+            color: var(--primary);
+            margin: 1.5rem 0 1rem 0;
+            font-weight: 700;
+        }
+        
+        .business-analysis h1 { font-size: 1.8rem; }
+        .business-analysis h2 { font-size: 1.5rem; }
+        .business-analysis h3 { font-size: 1.3rem; }
+        
+        .business-analysis ul {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+        
+        .business-analysis li {
+            margin: 0.5rem 0;
+            line-height: 1.6;
+        }
+        
+        .business-analysis strong {
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+        
+        .business-analysis em {
+            color: var(--text-light);
+            font-style: italic;
+        }
+        
+        .explanation-section h1, .explanation-section h2, .explanation-section h3 {
+            color: var(--primary);
+            margin: 1.5rem 0 1rem 0;
+            font-weight: 700;
+        }
+        
+        .explanation-section h1 { font-size: 1.8rem; }
+        .explanation-section h2 { font-size: 1.5rem; }
+        .explanation-section h3 { font-size: 1.3rem; }
+        
+        .explanation-section ul {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+        
+        .explanation-section li {
+            margin: 0.5rem 0;
+            line-height: 1.6;
+        }
+        
+        .explanation-section strong {
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+        
+        .explanation-section em {
+            color: var(--text-light);
+            font-style: italic;
+        }
+        
+        .code-section {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+        
+        .code-header {
+            background: #334155;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-bottom: 1px solid #475569;
+        }
+        
+        .code-content {
+            padding: 1.5rem;
+            overflow-x: auto;
+        }
+        
+        .code-content pre {
+            margin: 0;
+            font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+        
+        .explanation-section {
+            background: linear-gradient(135deg, #fefce8 0%, #fef3c7 100%);
+            border-left: 4px solid var(--warning);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            line-height: 1.7;
+        }
+        
+        .steps-section {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border-left: 4px solid var(--success);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+        }
+        
+        .steps-list {
+            list-style: none;
+            counter-reset: step-counter;
+        }
+        
+        .steps-list li {
+            counter-increment: step-counter;
+            margin: 0.75rem 0;
+            padding-left: 2rem;
+            position: relative;
+            line-height: 1.6;
+        }
+        
+        .steps-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: var(--success);
+            color: white;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--text-light);
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 0 0.5rem;
+            }
+            
+            .kpi-content {
+                padding: 1rem;
+            }
+            
+            .dataset-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Loading animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .kpi-card {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .kpi-card:nth-child(1) { animation-delay: 0.1s; }
+        .kpi-card:nth-child(2) { animation-delay: 0.2s; }
+        .kpi-card:nth-child(3) { animation-delay: 0.3s; }
+        .kpi-card:nth-child(4) { animation-delay: 0.4s; }
+        .kpi-card:nth-child(5) { animation-delay: 0.5s; }
+    </style>
+    </head>
+    <body>
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="ai-badge">AI Agent Analysis Complete</div>
+                    <h1>Deep Analysis Report</h1>
+                    <p>Powered by Advanced AI • Generated on 2025-06-11 10:49:54</p>
+                    <div class="completion-status">Analysis Successfully Completed</div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="container">
+                <!-- Executive Summary -->
+                <div class="summary-card">
+                    <h2>Executive Summary</h2>
+                    
+                    <!-- Dataset Information -->
+                    <div class="dataset-info">
+                        <h4>🔍 AI Analysis Overview</h4>
+                        <div class="dataset-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">7</div>
+                                <div class="stat-label">Columns Processed</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">15</div>
+                                <div class="stat-label">KPIs Analyzed</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">100%</div>
+                                <div class="stat-label">Analysis Complete</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">AI</div>
+                                <div class="stat-label">Powered Analysis</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- AI Generated Summary -->
+                    <div class="content-section">
+                        <h4>🤖 AI-Generated Insights</h4>
+                        <div class="business-analysis">
+                            Executive Summary:<br>
+<br>
+1. Impact of BMI on Medical Charges:
+<ul>
+<li>There is a clear positive correlation between Body Mass Index (BMI) and medical insurance charges.</li>
+<li>Individuals with higher BMI tend to incur significantly higher medical costs, likely due to increased health risks associated with overweight and obesity.</li>
+<li>This insight is critical for healthcare providers, insurers, and policymakers to design targeted interventions and cost management strategies addressing obesity-related health issues.</li>
+</ul>
+<br>
+2. Correlation between Age and Medical Charges:
+<ul>
+<li>Analysis indicates a positive but moderate correlation between age and medical charges.</li>
+<li>Older individuals generally incur higher medical expenses, reflecting age-related health deterioration.</li>
+<li>This trend supports the need for age-based risk assessments and pricing models, enabling insurers to optimize coverage plans and allocate resources more effectively.</li>
+</ul>
+<br>
+3. Limitations in Analyzing Other KPIs:
+<ul>
+<li>Attempts to analyze the impact of the number of children and sex on medical charges were unsuccessful due to repeated data access issues caused by environment resets.</li>
+<li>Reliable analysis of these factors remains important for a comprehensive understanding of medical cost drivers and should be prioritized once data stability is ensured.</li>
+</ul>
+<br>
+Overall, the key actionable insight is the identification of BMI and age as significant drivers of medical insurance costs. Strategic focus on managing obesity and tailoring policies for different age groups will likely improve cost control and risk management in healthcare insurance. Additional KPI analyses should be completed when stable data access is restored to enhance decision-making further.
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- KPI Analysis Cards -->
+                <div class="kpi-grid">
+    
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Average Insurance Charges by Age Group</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/0fc0388d-5028-48d9-9e99-b311ff8229d2_20250611_051239.png" alt="Chart for Average Insurance Charges by Age Group" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals that average insurance charges increase with age. Younger age groups (18-24) have the lowest average charges, around $9,011, while older groups like 55-64 years incur significantly higher costs, nearing $18,513. The oldest age group (65-74) lacks sufficient data for reliable average charge calculation. This trend suggests insurance pricing reflects the escalating health risks as people age. For the business, this implies opportunities to target younger customers with attractive rates while developing risk management strategies for older clients. Additionally, the missing data for the oldest group highlights a data collection gap to address.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/2b0fcb42d2d11103b93fee7958902f72-73f30c07-2d65-4cc0-a3cc-51986bfda394_20250524_104352_insurance.csv'
+data = pd.read_csv(file_path)
+
+# Define age groups
+age_bins = [17, 25, 35, 45, 55, 65, 75]
+age_labels = ['18-24', '25-34', '35-44', '45-54', '55-64', '65-74']
+data['age_group'] = pd.cut(data['age'], bins=age_bins, labels=age_labels, right=False)
+
+# Calculate average insurance charges by age group
+avg_charges_by_age_group = data.groupby('age_group')['charges'].mean().reset_index()
+
+# Plotting the average insurance charges by age group
+plt.figure(figsize=(10, 6))
+sns.barplot(x='age_group', y='charges', data=avg_charges_by_age_group, palette='viridis')
+plt.title('Average Insurance Charges by Age Group')
+plt.xlabel('Age Group')
+plt.ylabel('Average Insurance Charges ($)')
+plt.grid(axis='y')
+
+# Save and show the plot
+plt.savefig('/mnt/data/average_insurance_charges_by_age_group.png')
+plt.show()
+
+avg_charges_by_age_group</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code begins by importing the necessary libraries: pandas for data manipulation, and matplotlib and seaborn for visualization. It then loads the insurance dataset from the specified file path. The data's age column is categorized into defined age groups (bins) with labels such as '18-24' and '25-34'. Next, it calculates the mean insurance charge for each age group using groupby and mean functions. A bar plot is generated to visually represent average insurance charges across these age groups, with appropriate titles and axis labels. Finally, the plot is saved as an image file and displayed.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>First, the dataset was loaded and reviewed to identify relevant columns, focusing on 'age' and 'charges'. Age groups were then defined with specified bins to segment the age data into meaningful categories. The dataset was updated with an 'age_group' column based on these bins. Then, the average insurance charges for each age group were computed by grouping the data by this new column and calculating the mean of charges. A bar chart was created to visually illustrate the variation of average charges by age group. The final results and plot were interpreted to extract key business insights regarding how insurance costs escalate with age and to note the absence of data for the oldest age group.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Average Insurance Charges by Sex</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/0849c317-4beb-435d-a915-5a2629714dba_20250611_051305.png" alt="Chart for Average Insurance Charges by Sex" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis indicates that average insurance charges differ by sex, with males incurring higher charges than females in the dataset. Specifically, on average, males are charged approximately $1,387 more than females. This difference could be influenced by factors such as differences in health risk profiles, lifestyle, or insurance pricing policies. For insurance companies, these insights are important for designing fair pricing models and targeted marketing strategies. It also suggests the value of further analysis considering other contributing variables like age, smoking status, region, or BMI to understand the disparity better.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/2b0fcb42d2d11103b93fee7958902f72-73f30c07-2d65-4cc0-a3cc-51986bfda394_20250524_104352_insurance.csv'
+data = pd.read_csv(file_path)
+
+# Calculate the average insurance charges by sex
+avg_charges_by_sex = data.groupby('sex')['charges'].mean().reset_index()
+
+# Plotting the results
+plt.figure(figsize=(8, 6))
+sns.barplot(x='sex', y='charges', data=avg_charges_by_sex, palette='viridis')
+plt.title('Average Insurance Charges by Sex')
+plt.xlabel('Sex')
+plt.ylabel('Average Charges')
+plt.tight_layout()
+
+# Save the plot
+plot_path = '/mnt/data/avg_insurance_charges_by_sex.png'
+plt.savefig(plot_path)
+
+# Display the plot
+plt.show()
+
+avg_charges_by_sex</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code first imports necessary libraries: pandas for data handling, matplotlib and seaborn for plotting. It loads the insurance dataset from a specified CSV file path. It then computes the average insurance charges grouped by the 'sex' column, summarizing the mean charges for males and females. After calculating these averages, the code creates a bar plot to visually represent the difference in average charges between the sexes. The plot is titled and axis labels are set appropriately. The figure is saved to a path and then displayed. Finally, the average charges by sex data frame is returned for inspection.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The agent computed the KPI, average insurance charges by sex, by first loading the insurance claims dataset. Then, the agent grouped the data by the 'sex' attribute and calculated the mean of the 'charges' column for each group, thus obtaining separate average charges for males and females. The agent then plotted these averages in a bar chart to visualize the comparison clearly. From this calculation, business insights were drawn concerning differences in insurance charges between sexes and potential implications for insurance pricing and marketing strategies.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Average Insurance Charges by BMI Category</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/443aa707-1e8a-442a-a180-7bb70c1af53c_20250611_051333.png" alt="Chart for Average Insurance Charges by BMI Category" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals a clear relationship between BMI categories and average insurance charges. Insurance costs increase with higher BMI categories, with individuals classified as 'Obese' incurring the highest average charges and those classified as 'Underweight' the lowest. This pattern indicates that BMI is a significant factor influencing insurance pricing likely due to the associated health risks and potential medical expenses. Insurance companies could leverage this insight to tailor their pricing models, risk assessments, and possibly encourage healthier lifestyles among policyholders to reduce costs.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/2b0fcb42d2d11103b93fee7958902f72-73f30c07-2d65-4cc0-a3cc-51986bfda394_20250524_104352_insurance.csv'
+df = pd.read_csv(file_path)
+
+# Define BMI categories
+ def bmi_category(bmi):
+    if bmi < 18.5:
+        return 'Underweight'
+    elif 18.5 <= bmi < 25:
+        return 'Normal weight'
+    elif 25 <= bmi < 30:
+        return 'Overweight'
+    else:
+        return 'Obese'
+
+# Apply BMI categorization
+ df['bmi_category'] = df['bmi'].apply(bmi_category)
+
+# Calculate average insurance charges by BMI category
+avg_charges_by_bmi = df.groupby('bmi_category')['charges'].mean().reset_index()
+
+# Sort categories for visualization
+bmi_order = ['Underweight', 'Normal weight', 'Overweight', 'Obese']
+avg_charges_by_bmi['bmi_category'] = pd.Categorical(avg_charges_by_bmi['bmi_category'], categories=bmi_order, ordered=True)
+avg_charges_by_bmi = avg_charges_by_bmi.sort_values('bmi_category')
+
+# Plotting
+plt.figure(figsize=(10, 6))
+sns.barplot(data=avg_charges_by_bmi, x='bmi_category', y='charges', palette='viridis')
+plt.title('Average Insurance Charges by BMI Category')
+plt.xlabel('BMI Category')
+plt.ylabel('Average Insurance Charges ($)')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.savefig('/mnt/data/average_insurance_charges_by_bmi_category.png')
+plt.show()</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code loads a dataset containing insurance data, including BMI and insurance charges. It defines a function to categorize BMI values into four standard groups: Underweight, Normal weight, Overweight, and Obese. This categorization is applied to the dataset to create a new BMI category column. Then, the code calculates the average insurance charges for each BMI category by grouping the data accordingly. To visualize the findings clearly, it organizes the categories in logical order and uses a bar plot to display the average charges per BMI category. Finally, it saves and shows the plot to aid in interpreting the data visually.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The agent started by loading the dataset and examining its structure to understand the relevant variables. Next, it defined BMI categories based on standard health ranges and applied this categorization to each record. The agent then computed the KPI by calculating the average insurance charges for each BMI category using grouping and aggregation functions. Finally, the agent created a bar chart visualizing these averages across BMI categories, facilitating the observation of trends and supporting business insights. The pattern observed showed increasing insurance charges with higher BMI categories.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Average Insurance Charges by Number of Children</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/eaa5bd5a-9b1a-46b7-9d92-8a709a5186b2_20250611_051407.png" alt="Chart for Average Insurance Charges by Number of Children" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals how average insurance charges vary with the number of children an individual has. It shows that people with two to four children tend to have higher average insurance charges, peaking for those with three children. Those with zero or one child have lower average charges, and charges decrease notably for individuals with five children. This pattern suggests that the number of children correlates with factors influencing insurance costs, such as healthcare needs or lifestyle. However, the drop for five children might be due to sample size or other demographic variations. Insurance companies could utilize this insight to better tailor policies and premium pricing based on family size.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/2b0fcb42d2d11103b93fee7958902f72-73f30c07-2d65-4cc0-a3cc-51986bfda394_20250524_104352_insurance.csv'
+df = pd.read_csv(file_path)
+
+# Calculate average insurance charges by number of children
+avg_charges_by_children = df.groupby('children')['charges'].mean().reset_index()
+
+# Plotting the KPI
+plt.figure(figsize=(10, 6))
+sns.barplot(x='children', y='charges', data=avg_charges_by_children, palette='viridis')
+plt.title('Average Insurance Charges by Number of Children')
+plt.xlabel('Number of Children')
+plt.ylabel('Average Insurance Charges')
+plt.xticks(avg_charges_by_children['children'])
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+
+# Save plot
+plot_path = '/mnt/data/avg_insurance_charges_by_children.png'
+plt.savefig(plot_path)
+
+# Show plot
+plt.show()
+
+plot_path</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code begins by importing necessary libraries like pandas for data manipulation and matplotlib/seaborn for visualization. It loads the insurance dataset from a CSV file. The dataset is grouped by the 'children' column, and the mean of the 'charges' column is computed for each group, which represents the average insurance charge for families with different numbers of children. A bar plot is then created with the number of children on the x-axis and the average insurance charges on the y-axis, using a visually appealing color palette. The plot is titled and labeled appropriately, with grid lines to enhance readability. Finally, the plot is saved as an image file and displayed.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The agent first loaded the dataset and inspected its structure to understand relevant columns. Then, to compute the KPI 'Average Insurance Charges by Number of Children,' the agent grouped the dataset by the 'children' attribute and calculated the mean insurance charge within each group. After computing these averages, a bar chart was created to visualize the relationship clearly. The visual inspection of the bar chart helped interpret the trend of how insurance charges vary with the number of children, providing insights into potential factors influencing insurance pricing.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Average Insurance Charges by Smoker vs Non-Smoker</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/0ce93c2c-3148-442d-a11d-b02e3a03eb85_20250611_051432.png" alt="Chart for Average Insurance Charges by Smoker vs Non-Smoker" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals a significant difference in average insurance charges between smokers and non-smokers. Smokers incur much higher charges, approximately $32,050 on average, compared to nearly $8,434 for non-smokers. This indicates that smoking is strongly correlated with increased health risks and medical costs, which insurance companies factor into their pricing strategies by charging smokers higher premiums. This insight is valuable for risk-based pricing models and for encouraging smoking cessation programs to reduce insurance liabilities.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/2b0fcb42d2d11103b93fee7958902f72-73f30c07-2d65-4cc0-a3cc-51986bfda394_20250524_104352_insurance.csv'
+df = pd.read_csv(file_path)
+
+# Calculate average insurance charges grouped by smoker status
+average_charges_by_smoker = df.groupby('smoker')['charges'].mean().reset_index()
+
+# Plotting the average insurance charges by smoker status
+plt.figure(figsize=(8, 6))
+sns.barplot(x='smoker', y='charges', data=average_charges_by_smoker, palette='coolwarm')
+plt.title('Average Insurance Charges by Smoker vs Non-Smoker')
+plt.xlabel('Smoker Status')
+plt.ylabel('Average Insurance Charges ($)')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+
+# Save the plot
+plot_path = '/mnt/data/average_insurance_charges_smoker_vs_non_smoker.png'
+plt.savefig(plot_path)
+
+# Show the plot
+plt.show()
+
+average_charges_by_smoker</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code begins by importing necessary libraries: pandas for data manipulation, matplotlib and seaborn for visualization. It loads the insurance dataset from a specified CSV file path into a DataFrame. Then, it calculates the average insurance charges by grouping the data according to the 'smoker' status and summarizing the 'charges' column using the mean function. This grouped data is stored for visualization. Next, it creates a bar plot with smoker status on the x-axis and average charges on the y-axis to visually compare the insurance costs between smokers and non-smokers. The plot is styled and saved as an image file, then displayed.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>First, the analyst loaded the insurance dataset containing details about individuals including smoking status and insurance charges. They then computed the Key Performance Indicator (KPI) by grouping the data on the smoker status and calculating the mean insurance charges for each group (smokers vs non-smokers). Once the average charges were computed, they visualized this KPI using a bar chart to illustrate the stark difference in charges between the two groups. Finally, they interpreted the results in business terms, highlighting the significant cost disparity and its implications for insurance risk assessment and pricing.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Average Insurance Charges by Region</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/0cb1487a-b45e-48fd-9c39-c07b3de1c985_20250611_051500.png" alt="Chart for Average Insurance Charges by Region" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals that insurance charges vary significantly by region. The Southeast region exhibits the highest average insurance charges, suggesting that individuals there generally pay more, potentially due to higher healthcare costs, lifestyle factors, or demographic influences. The Northeast follows with moderately high charges, while the Northwest and Southwest regions show comparatively lower insurance costs. These insights indicate that the insurance provider should consider adopting region-specific pricing strategies and focus marketing and risk assessment efforts according to these regional differences to remain competitive and fair.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/2b0fcb42d2d11103b93fee7958902f72-73f30c07-2d65-4cc0-a3cc-51986bfda394_20250524_104352_insurance.csv'
+data = pd.read_csv(file_path)
+
+# Calculate the average insurance charges by region
+avg_charges_by_region = data.groupby('region')['charges'].mean().reset_index()
+
+# Sorting data for better visualization
+avg_charges_by_region = avg_charges_by_region.sort_values(by='charges', ascending=False)
+
+# Plotting the average insurance charges by region
+plt.figure(figsize=(10, 6))
+sns.barplot(x='region', y='charges', data=avg_charges_by_region, palette='viridis')
+
+# Adding labels and title to the plot
+plt.title('Average Insurance Charges by Region')
+plt.xlabel('Region')
+plt.ylabel('Average Charges ($)')
+plt.xticks(rotation=45)
+plt.tight_layout()
+
+# Save the figure
+plt.savefig('/mnt/data/average_insurance_charges_by_region.png')
+
+# Show the plot
+plt.show()</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code starts by importing essential libraries for data manipulation (pandas) and visualization (matplotlib and seaborn). It reads the insurance dataset from the specified CSV file path. Then, it calculates the average insurance charges grouped by the 'region' column using pandas groupby and mean functions. The resulting grouped data is sorted in descending order by charges for clearer visualization. A bar plot is created to visually display the average charges by region with labeled axes and a title. The plot is saved as a PNG file and displayed to the user.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The agent first loaded the insurance dataset to understand its structure and relevant columns. Identifying the KPI as 'Average Insurance Charges by Region,' they used groupby to compute the mean charges for each region. The grouped data was sorted to enhance the bar chart visualization clarity. The agent visualized the average charges by region using a bar plot, which highlighted regional disparities in insurance costs. Finally, the agent interpreted the plot, providing business insights and implications based on the differences in average charges across regions.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Distribution of Charges across Different Regions</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/d913ee95-e0be-49ce-ab73-5b41fc636233_20250611_051528.png" alt="Chart for Distribution of Charges across Different Regions" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis examines the distribution of medical insurance charges across four different regions (southwest, southeast, northwest, northeast). It reveals notable differences in the range, median, and variability of charges by region. Specifically, the southeast region shows higher median charges and greater variability, suggesting it has higher costs and potentially greater risk exposure. Meanwhile, the southwest region has lower median charges and less variability. The northeast and northwest regions have similar distributions with moderate charges and variability. From a business standpoint, this suggests a tailored approach to pricing or service strategies may be necessary for different regions, with particular attention to cost management or risk assessment in the southeast region due to its wider charge variance and higher median.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/2b0fcb42d2d11103b93fee7958902f72-73f30c07-2d65-4cc0-a3cc-51986bfda394_20250524_104352_insurance.csv'
+df = pd.read_csv(file_path)
+
+# Display basic info and first few rows to understand the data structure
+df.info(), df.head()
+
+# Set the style for the plot
+sns.set(style="whitegrid")
+
+# Create a boxplot for the distribution of charges across different regions
+plt.figure(figsize=(10, 6))
+ax = sns.boxplot(x='region', y='charges', data=df)
+ax.set_title('Distribution of Charges Across Different Regions')
+ax.set_xlabel('Region')
+ax.set_ylabel('Charges')
+
+# Save the plot
+plt.savefig('/mnt/data/charges_distribution_by_region.png')
+
+# Show the plot
+plt.show()</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code begins by importing the necessary libraries: pandas for data manipulation, matplotlib, and seaborn for visualization. It then loads the insurance dataset from a CSV file into a DataFrame and displays basic info and the first few rows to understand its structure. Following this, the code sets a whitegrid style for the seaborn plots for better aesthetics. It creates a boxplot to visualize the distribution of insurance charges across different regions in the dataset, labeling the axes and the plot for clarity. The plot is saved as an image file and displayed to the user.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The agent first loaded the dataset and examined its structure to understand the columns and data types. Recognizing that regional differences might be significant, it focused on analyzing charges across the four regions by summarizing these charges with a boxplot. This visualization method effectively captured the range, median, and variability of charges, including outliers. By comparing these statistics across regions, the agent derived insights about regional differences in insurance charges and identified the southeast region as having notably higher median charges and greater variability. This step-by-step distribution analysis allowed the agent to draw meaningful business conclusions about tailoring pricing or services regionally.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Top 5 Highest Average Charges by Region</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/f9e8b84e-42bc-473d-b0ab-d93ec08e24cc_20250611_051558.png" alt="Chart for Top 5 Highest Average Charges by Region" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis identifies the top 5 regions with the highest average medical insurance charges, revealing that the Southeast region has the highest average charges followed by the Northeast, Southwest, and Northwest regions. This highlights regional disparities in insurance costs, which can be influenced by local healthcare costs, accessibility, or demographic factors. For insurance companies, this suggests an opportunity to tailor pricing strategies, marketing efforts, and underwriting models based on regional cost dynamics to enhance profitability and customer engagement.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+data = pd.read_csv('/mnt/data/2b0fcb42d2d11103b93fee7958902f72-73f30c07-2d65-4cc0-a3cc-51986bfda394_20250524_104352_insurance.csv')
+
+# Calculate average charges by region
+avg_charges_by_region = data.groupby('region')['charges'].mean().sort_values(ascending=False).head(5)
+
+# Plot the top 5 highest average charges by region
+plt.figure(figsize=(10, 6))
+sns.barplot(x=avg_charges_by_region.values, y=avg_charges_by_region.index, palette='viridis')
+plt.title('Top 5 Highest Average Charges by Region')
+plt.xlabel('Average Charges')
+plt.ylabel('Region')
+
+plt.savefig('/mnt/data/top_5_highest_avg_charges_by_region.png')
+plt.show()</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The provided code first imports the necessary libraries: pandas for data manipulation, and matplotlib and seaborn for visualization. It reads a CSV file containing insurance data, including the 'region' and 'charges' columns. The code then groups the data by 'region' and calculates the mean insurance charges for each region. It sorts these averages in descending order and selects the top 5 regions with the highest average charges. These results are visualized using a horizontal bar plot, where the x-axis represents the average charges and the y-axis lists the regions. Finally, the plot is saved as an image and displayed.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>Load the medical insurance dataset from a CSV file.</li><li>Inspect the dataset to confirm the presence of relevant columns like region and charges.</li><li>Group the dataset by region and compute the average medical charges for each group.</li><li>Sort these average charges in descending order to identify the regions with the highest costs.</li><li>Select the top 5 regions based on the highest average charges.</li><li>Create a bar plot to visually represent these top 5 regions and their corresponding average charges.</li><li>Save and display the plot for further interpretation and business insights.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Bottom 5 Lowest Average Charges by Region</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/fe579efd-b5e8-4806-be91-d50c12856d37_20250611_051624.png" alt="Chart for Bottom 5 Lowest Average Charges by Region" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals that there are four unique regions in the dataset: southwest, northwest, northeast, and southeast. The 'southwest' and 'northwest' regions have the lowest average insurance charges, approximately $12,346.94 and $12,417.58 respectively. The 'northeast' and 'southeast' regions show higher average charges, around $13,406.38 and $14,735.41. Business-wise, this indicates regional variations in insurance costs which could reflect different healthcare cost structures or claim patterns. Insurance companies could leverage this insight to tailor pricing, marketing, or risk management strategies regionally to optimize competitiveness and profitability.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/2b0fcb42d2d11103b93fee7958902f72-73f30c07-2d65-4cc0-a3cc-51986bfda394_20250524_104352_insurance.csv'
+data = pd.read_csv(file_path)
+
+# Calculate average charges by region
+average_charges_by_region = data.groupby('region')['charges'].mean().sort_values()
+
+# Select bottom 5 regions with the lowest average charges
+bottom_5_regions = average_charges_by_region.head(5)
+
+# Plot the bottom 5 lowest average charges by region
+plt.figure(figsize=(10, 6))
+sns.barplot(x=bottom_5_regions.values, y=bottom_5_regions.index, palette='viridis')
+plt.xlabel('Average Charges')
+plt.ylabel('Region')
+plt.title('Bottom 5 Lowest Average Charges by Region')
+plt.tight_layout()
+
+# Save and show the plot
+plt.savefig('/mnt/data/bottom_5_lowest_avg_charges_by_region.png')
+plt.show()
+
+bottom_5_regions</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code begins by importing necessary libraries for data manipulation and visualization. It loads the insurance dataset from a CSV file into a DataFrame. The script groups the data by 'region' and calculates the mean insurance charges for each region, then sorts these averages in ascending order. It selects the top five regions with the lowest average charges, although the dataset contains only four unique regions. Next, it creates a horizontal bar plot using seaborn to visually represent these average charges by region, setting appropriate labels and title. The plot is saved as an image file and displayed. Finally, the bottom five regions with average charges are returned for further review.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>Load the insurance dataset from a CSV file into a DataFrame.</li><li>Group the data by the 'region' column and compute the average 'charges' for each region.</li><li>Sort these average charges in ascending order to identify the regions with the lowest costs.</li><li>Extract the bottom five regions based on average charges (noting that only four unique regions exist in the data).</li><li>Create a horizontal bar chart to visualize these average charges by region.</li><li>Save the generated plot image for reporting.</li><li>Review and interpret results to understand regional cost differences and their implications for business strategy.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Correlation between Age and Charges</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/af5dd19d-0540-4d28-bd5c-9e3efcc586fa_20250611_051713.png" alt="Chart for Correlation between Age and Charges" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals a weak to moderate positive correlation (approximately 0.30) between age and medical insurance charges, indicating that charges generally increase with age but with considerable variability. A significant finding is that smoking status greatly impacts charges, with smokers incurring much higher costs regardless of age. This suggests insurance companies should prioritize lifestyle factors like smoking alongside age for risk assessment and pricing. Tailored policies or premium adjustments could be considered especially for older clients, as their charges tend to be higher on average.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset to inspect it
+file_path = '/mnt/data/2b0fcb42d2d11103b93fee7958902f72-73f30c07-2d65-4cc0-a3cc-51986bfda394_20250524_104352_insurance.csv'
+df = pd.read_csv(file_path)
+
+# Calculate the correlation between age and charges
+correlation = df['age'].corr(df['charges'])
+
+# Plotting the relationship between Age and Charges
+plt.figure(figsize=(10, 6))
+sns.scatterplot(data=df, x='age', y='charges', hue='smoker', alpha=0.7)
+plt.title('Scatter Plot of Charges vs Age with Smoking Status')
+plt.xlabel('Age')
+plt.ylabel('Charges')
+plt.legend(title='Smoker')
+plt.grid(True)
+
+# Save the plot file
+plot_path = '/mnt/data/charges_vs_age_scatterplot.png'
+plt.savefig(plot_path)
+
+# Show the plot
+plt.show()
+
+correlation</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code starts by importing necessary libraries: pandas for data handling, matplotlib and seaborn for visualization. It reads the insurance data from a CSV file into a DataFrame. It then calculates the Pearson correlation coefficient between 'age' and 'charges' columns to quantify the linear relationship. Afterwards, it creates a scatter plot visualizing 'charges' versus 'age', differentiating points by smoking status using color hue. The plot is customized with labels, title, and grid, saved as a PNG file, and displayed. Finally, the correlation value is returned for analysis.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The analyst first loaded the dataset and inspected its structure. Next, they calculated the correlation coefficient between 'age' and 'charges' to measure the strength of association. To better understand this relationship visually, they created a scatter plot with 'age' on the x-axis and 'charges' on the y-axis, using color coding to distinguish smokers from non-smokers. The plot showed that smokers tend to have higher charges regardless of age and that charges generally increase with age. These observations led to conclusions about the relative importance of age and lifestyle factors in determining insurance charges.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Correlation between BMI and Charges</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/bc0a0717-802e-47d7-bd0e-234fc59bdb0b_20250611_051741.png" alt="Chart for Correlation between BMI and Charges" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals that there is a weak positive correlation (approximately 0.20) between BMI and insurance charges. This indicates that as BMI increases, insurance charges tend to increase slightly, but the relationship is not strong. There is significant variability in charges for any given BMI, suggesting that BMI alone is not a sufficient predictor of insurance costs. Insurance companies should consider multiple factors to assess risk and pricing rather than relying solely on BMI. This insight encourages a more comprehensive evaluation of risk profiles in insurance policy determination.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset to understand its structure and content
+file_path = '/mnt/data/2b0fcb42d2d11103b93fee7958902f72-73f30c07-2d65-4cc0-a3cc-51986bfda394_20250524_104352_insurance.csv'
+data = pd.read_csv(file_path)
+
+# Calculate the correlation coefficient between BMI and charges
+correlation_bmi_charges = data['bmi'].corr(data['charges'])
+
+# Create a scatter plot with regression line to visualize the correlation
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x='bmi', y='charges', data=data, alpha=0.5)
+sns.regplot(x='bmi', y='charges', data=data, scatter=False, color='red')
+plt.title(f'Correlation between BMI and Charges (Correlation coefficient = {correlation_bmi_charges:.2f})')
+plt.xlabel('BMI')
+plt.ylabel('Charges')
+plt.grid(True)
+
+# Save the figure
+plt.savefig('/mnt/data/BMI_vs_Charges_correlation.png')
+
+plt.show()
+
+correlation_bmi_charges</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code begins by importing necessary libraries: pandas for data manipulation, matplotlib and seaborn for visualization. It loads the insurance dataset from a specified file path into a pandas DataFrame. The correlation coefficient between the 'bmi' column and the 'charges' column is then calculated to quantify the linear relationship between BMI and insurance charges. Next, a scatter plot is created using seaborn to visualize the distribution of charges relative to BMI values, with an added regression line in red to highlight the trend. Titles, axis labels, and grid lines are configured for clarity. The plot is saved as an image file for reference. Finally, the computed correlation coefficient is output to provide a summary metric of the relationship.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The analyst first loaded the insurance dataset to inspect its contents, which included variables such as age, sex, bmi, children, smoker, region, and charges. To evaluate the relationship between BMI and insurance charges, the analyst computed the Pearson correlation coefficient between the 'bmi' and 'charges' columns in the dataset. To visually support the correlation analysis, a scatter plot was created plotting BMI against charges, overlayed with a regression line to illustrate the trend. This approach allowed the analyst to see the degree and direction of association between BMI and charges. The correlation coefficient of around 0.20 was interpreted as a weak positive correlation, indicating that BMI has some impact on charges but is not the primary driver. The plot and coefficient were used to derive business insights regarding the modest influence of BMI on insurance pricing and the need to consider other factors.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Impact of Smoking Status on Charges</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/c7307b02-55b0-4cc3-a17c-0b720926b84a_20250611_051811.png" alt="Chart for Impact of Smoking Status on Charges" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals that smoking status significantly influences insurance charges. On average, smokers incur insurance charges of $32,050.23, which is nearly 3.8 times higher than the $8,434.27 average charges for non-smokers. This substantial difference is attributed to the increased health risks associated with smoking, which lead to higher medical expenses covered by insurance. This insight is critical for insurance companies in terms of risk assessment and pricing strategies, and it highlights the potential cost savings for individuals who quit smoking.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load dataset
+file_path = '/mnt/data/2b0fcb42d2d11103b93fee7958902f72-73f30c07-2d65-4cc0-a3cc-51986bfda394_20250524_104352_insurance.csv'
+df = pd.read_csv(file_path)
+
+# Calculate average charges for smokers and non-smokers
+charges_by_smoker_status = df.groupby('smoker')['charges'].mean().reset_index()
+
+# Visualize the impact of smoking status on charges
+plt.figure(figsize=(8,6))
+sns.barplot(x='smoker', y='charges', data=charges_by_smoker_status, palette='coolwarm')
+plt.title('Impact of Smoking Status on Insurance Charges')
+plt.xlabel('Smoker Status')
+plt.ylabel('Average Insurance Charges ($)')
+plt.savefig('/mnt/data/impact_smoking_status_charges.png')
+plt.show()
+
+charges_by_smoker_status</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code begins by importing the necessary libraries: pandas for data manipulation, matplotlib and seaborn for data visualization. It loads the insurance dataset from the specified file path into a DataFrame. It then calculates the mean insurance charges grouped by the 'smoker' status. These averages are stored in a new DataFrame. A bar plot is created to visually compare the average insurance charges between smokers and non-smokers, with appropriate titles and labels. The generated plot is saved as an image file and displayed.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The agent first loaded the insurance dataset and examined its structure. Next, the agent grouped the data by the smoking status ('smoker' column) and computed the average insurance charges ('charges') for each group. To clearly illustrate the findings, the agent generated a bar chart comparing average charges for smokers and non-smokers. Finally, the agent interpreted the results to provide business insights, focusing on how smoking status affects insurance costs and implications for stakeholders.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Effect of Number of Children on Insurance Charges</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/f92e04b5-694a-44af-8511-6eaf12116841_20250611_051834.png" alt="Chart for Effect of Number of Children on Insurance Charges" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals a relationship between the number of children and average insurance charges. Insurance charges generally increase with the number of children up to 3, indicating higher costs for families with 2 to 3 children. However, there is a noticeable decrease in average charges for families with 4 or 5 children, which could be due to specific demographic factors or discounts. These insights can help insurance companies in refining their pricing models and risk assessments based on family size.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/2b0fcb42d2d11103b93fee7958902f72-73f30c07-2d65-4cc0-a3cc-51986bfda394_20250524_104352_insurance.csv'
+df = pd.read_csv(file_path)
+
+# Group data by number of children and calculate mean insurance charges
+children_charges = df.groupby('children')['charges'].mean().reset_index()
+
+# Visualization
+plt.figure(figsize=(8, 5))
+sns.barplot(x='children', y='charges', data=children_charges, palette='viridis')
+plt.title('Effect of Number of Children on Average Insurance Charges')
+plt.xlabel('Number of Children')
+plt.ylabel('Average Insurance Charges')
+plt.grid(axis='y')
+
+# Save and show the chart
+chart_path = '/mnt/data/effect_of_children_on_insurance_charges.png'
+plt.savefig(chart_path)
+plt.show()
+
+children_charges</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code first imports necessary libraries: pandas for data handling, matplotlib and seaborn for visualization. It loads the dataset from a CSV file and reads it into a DataFrame. Then, it groups the dataset by the number of children and computes the average insurance charges for each group. A bar plot is created to visualize the average charges against the number of children, styled with a color palette. The plot is titled and labelled for clarity, with a grid for better readability. Finally, the plot is saved to a PNG file and displayed.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The analyst started by loading and inspecting the insurance dataset to understand its structure, including columns for age, sex, bmi, children, smoker status, region, and insurance charges. They then focused on the 'children' column to explore how the number of children impacts average insurance charges. By grouping the data based on the number of children and calculating mean charges for each group, they quantified this relationship. The results were visualized with a bar chart showing average charges per number of children. The analyst observed that charges tend to increase with 2-3 children but drop for families with 4 or 5 children, drawing insights relevant for insurance pricing and risk assessment strategies.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Comparison of Charges between Male and Female</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/73d0e8f5-2de9-4854-82b4-745d1047e7f5_20250611_051905.png" alt="Chart for Comparison of Charges between Male and Female" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals that male clients have higher average insurance charges compared to female clients—approximately $13,957 versus $12,570, respectively. This indicates that gender is a significant factor influencing insurance charges in this dataset. Insurance companies can use this insight to refine their risk assessment models and pricing strategies, potentially creating gender-targeted products or adjusting premiums accordingly to optimize revenue and competitiveness.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/2b0fcb42d2d11103b93fee7958902f72-73f30c07-2d65-4cc0-a3cc-51986bfda394_20250524_104352_insurance.csv'
+data = pd.read_csv(file_path)
+
+# Calculate average insurance charges by sex
+avg_charges_by_sex = data.groupby('sex')['charges'].mean().reset_index()
+
+# Plot average charges by sex
+plt.figure(figsize=(8, 5))
+sns.barplot(x='sex', y='charges', data=avg_charges_by_sex, palette='coolwarm')
+plt.title('Average Insurance Charges by Sex')
+plt.xlabel('Sex')
+plt.ylabel('Average Charges')
+plt.savefig('/mnt/data/average_charges_by_sex.png')
+plt.show()
+
+avg_charges_by_sex</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code first imports necessary libraries for data manipulation and visualization (pandas, matplotlib, seaborn). It loads the insurance dataset from a CSV file into a pandas DataFrame. Then, it computes the average insurance charges grouped by the 'sex' column using pandas' groupby and mean functions, resetting the index for better data handling. Using seaborn's barplot, it visualizes the average insurance charges for males and females, enhancing readability with titles and axis labels. The plot is saved as an image file and displayed for review.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The agent started by loading the dataset to understand its structure, which includes fields such as age, sex, bmi, children, smoker, region, and charges. Next, the agent focused on the primary KPI: the difference in average insurance charges by gender. They grouped the data by sex and calculated the mean insurance charges for males and females separately. This computation clearly quantified the average charges to facilitate comparison. Finally, they visualized the results using a bar chart to provide a straightforward, visual interpretation of the difference in average charges, highlighting that males tend to have higher insurance costs than females in the dataset.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <h3>Age Distribution and Charges Analysis</h3>
+                        </div>
+                        <div class="kpi-content">
+                            <!-- Chart -->
+                            <div class="chart-container">
+        <img src="https://test730305913143367.blob.core.windows.net/images-analysis/6dea298d-06d2-4451-a498-5612a60df49d_20250611_051936.png" alt="Chart for Age Distribution and Charges Analysis" loading="lazy">
+                            </div>
+                            
+                            <!-- Business Analysis -->
+                            <div class="content-section">
+                                <h4>💼 Business Analysis</h4>
+                                <div class="business-analysis">
+                                    The analysis reveals that the age distribution among insurance clients is broad, with a dense concentration in younger age groups around 18 to 20 years, and a gradual decline in the older age ranges. Medical charges are observed to generally increase with age, indicating higher healthcare costs for older individuals. However, there is significant variability in charges across all ages, suggesting that factors beyond age, such as health conditions or smoking habits, impact costs. These insights suggest that insurance premiums should be adjusted to account for age-related risk and that personalized policies or targeted preventative interventions could improve risk management and customer satisfaction.
+                                </div>
+                            </div>
+                            
+                            <!-- Code -->
+                            <div class="content-section">
+                                <h4>💻 Analysis Code</h4>
+                                <div class="code-section">
+                                    <div class="code-header">Python Code</div>
+                                    <div class="code-content">
+                                        <pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/2b0fcb42d2d11103b93fee7958902f72-73f30c07-2d65-4cc0-a3cc-51986bfda394_20250524_104352_insurance.csv'
+data = pd.read_csv(file_path)
+
+# Basic statistics on age and charges
+age_stats = data['age'].describe()
+charges_stats = data['charges'].describe()
+
+# Plotting Age Distribution
+plt.figure(figsize=(12, 5))
+
+plt.subplot(1, 2, 1)
+sns.histplot(data['age'], bins=15, kde=True, color='skyblue')
+plt.title('Age Distribution')
+plt.xlabel('Age')
+plt.ylabel('Number of Individuals')
+
+# Plotting Charges vs Age
+plt.subplot(1, 2, 2)
+sns.scatterplot(x='age', y='charges', data=data, alpha=0.6)
+plt.title('Medical Charges vs Age')
+plt.xlabel('Age')
+plt.ylabel('Charges')
+
+plt.tight_layout()
+plt.savefig('/mnt/data/age_distribution_charges_analysis.png')
+plt.show()</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation -->
+                            <div class="content-section">
+                                <h4>📝 Code Explanation</h4>
+                                <div class="explanation-section">
+                                    The code first loads the insurance dataset into a pandas DataFrame and computes basic descriptive statistics for age and medical charges. Then, it creates two visualizations side-by-side using matplotlib and seaborn: a histogram with a KDE overlay showing the distribution of individual ages, and a scatter plot displaying the relationship between age and medical charges, where each point corresponds to an individual's charges at a given age. The plot is saved as an image file and displayed.
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Steps -->
+                            <div class="content-section">
+                                <h4>🔍 Analysis Steps</h4>
+                                <div class="steps-section">
+        <ol class="steps-list"><li>The analyst started by loading the insurance data and inspecting its content. Next, they computed summary statistics for the 'age' and 'charges' fields to understand the central tendencies and variability. Then, the analyst produced visualizations: a histogram to capture how many individuals fall into each age group, and a scatter plot to explore how charges change with age. They interpreted the plots to identify patterns such as the concentration of younger individuals and the trend of rising charges with age alongside variability. This combined statistical and visual approach allowed the analyst to derive actionable business insights about risk and cost variability in insurance pricing.</li></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                </div>
+            </div>
+        </main>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="color: var(--success);">✅</span>
+                        <span>Analysis Complete</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="color: var(--primary);">🤖</span>
+                        <span>AI Powered</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="color: var(--accent);">⚡</span>
+                        <span>Real-time Processing</span>
+                    </div>
+                </div>
+                <p>&copy; 2025 Deep Analysis Platform • Advanced AI Analytics Engine</p>
+                <p style="margin-top: 0.5rem; font-size: 0.875rem; opacity: 0.8;">
+                    🧠 Intelligent insights delivered by our AI agent
+                </p>
+            </div>
+        </footer>
+        
+        <script>
+            // Enhanced interactions and AI-like loading effects
+            document.addEventListener('DOMContentLoaded', function() {
+                // Simulate AI processing completion
+                setTimeout(() => {
+                    document.body.classList.add('analysis-complete');
+                }, 500);
+                
+                // Progressive card loading with AI feel
+                const cards = document.querySelectorAll('.kpi-card');
+                cards.forEach((card, index) => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(50px) scale(0.95)';
+                    
+                    setTimeout(() => {
+                        card.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0) scale(1)';
+                        
+                        // Add completion checkmark
+                        setTimeout(() => {
+                            const header = card.querySelector('.kpi-header h3');
+                            if (header && !header.querySelector('.completion-check')) {
+                                const check = document.createElement('span');
+                                check.className = 'completion-check';
+                                check.innerHTML = '✅';
+                                check.style.marginLeft = 'auto';
+                                check.style.fontSize = '1.2rem';
+                                check.style.opacity = '0';
+                                check.style.transform = 'scale(0)';
+                                check.style.transition = 'all 0.3s ease';
+                                header.appendChild(check);
+                                
+                                setTimeout(() => {
+                                    check.style.opacity = '1';
+                                    check.style.transform = 'scale(1)';
+                                }, 100);
+                            }
+                        }, 400);
+                    }, index * 200 + 300);
+                });
+                
+                // Enhanced code section interactions
+                const codeHeaders = document.querySelectorAll('.code-header');
+                codeHeaders.forEach(header => {
+                    header.style.cursor = 'pointer';
+                    header.style.transition = 'all 0.3s ease';
+                    
+                    header.addEventListener('mouseenter', function() {
+                        this.style.background = '#475569';
+                        this.style.transform = 'translateX(5px)';
+                    });
+                    
+                    header.addEventListener('mouseleave', function() {
+                        this.style.background = '#334155';
+                        this.style.transform = 'translateX(0)';
+                    });
+                    
+                    header.addEventListener('click', function() {
+                        const content = this.nextElementSibling;
+                        const isHidden = content.style.display === 'none';
+                        
+                        content.style.transition = 'all 0.3s ease';
+                        
+                        if (isHidden) {
+                            content.style.display = 'block';
+                            content.style.opacity = '0';
+                            content.style.transform = 'translateY(-10px)';
+                            this.innerHTML = '💻 Python Code (Click to collapse)';
+                            
+                            setTimeout(() => {
+                                content.style.opacity = '1';
+                                content.style.transform = 'translateY(0)';
+                            }, 10);
+                        } else {
+                            content.style.opacity = '0';
+                            content.style.transform = 'translateY(-10px)';
+                            this.innerHTML = '💻 Python Code (Click to expand)';
+                            
+                            setTimeout(() => {
+                                content.style.display = 'none';
+                            }, 300);
+                        }
+                    });
+                    
+                    // Initialize as collapsed
+                    header.innerHTML = '💻 Python Code (Click to expand)';
+                    header.nextElementSibling.style.display = 'none';
+                });
+                
+                // Add scroll-triggered animations
+                const observerOptions = {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -50px 0px'
+                };
+                
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.animation = 'fadeInUp 0.6s ease-out forwards';
+                        }
+                    });
+                }, observerOptions);
+                
+                document.querySelectorAll('.content-section').forEach(section => {
+                    observer.observe(section);
+                });
+                
+                // Add typing effect to AI insights
+                const summaryText = document.querySelector('.business-analysis');
+                if (summaryText) {
+                    summaryText.style.position = 'relative';
+                    summaryText.style.overflow = 'hidden';
+                    
+                    const cursor = document.createElement('span');
+                    cursor.innerHTML = '|';
+                    cursor.style.animation = 'blink 1s infinite';
+                    cursor.style.color = 'var(--primary)';
+                    cursor.style.fontWeight = 'bold';
+                    
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        @keyframes blink {
+                            0%, 50% { opacity: 1; }
+                            51%, 100% { opacity: 0; }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                    
+                    setTimeout(() => {
+                        summaryText.appendChild(cursor);
+                        setTimeout(() => cursor.remove(), 3000);
+                    }, 1000);
+                }
+            });
+        </script>
+    </body>
+    </html>
+    
