@@ -25,13 +25,16 @@ async def get_client():
     global client
     try:
         if client is None:
-            client = AsyncMongoClient(settings.MONGO_URI)
+            client = AsyncMongoClient(
+                settings.MONGO_URI,
+                serverSelectionTimeoutMS=5000,    # 5 second timeout
+                connectTimeoutMS=5000,            # 5 second connect timeout
+                maxPoolSize=50,                   # Max 50 connections
+                retryWrites=True                  # Retry failed writes
+            )
         return client
     except Exception as e:
-        # Log the error to console since we can't use MongoDB logging here
-        # (it would create an infinite loop)
         print(f"Failed to initialize MongoDB client: {str(e)}")
-        print(f"Traceback: {traceback.format_exc()}")
         raise
 
 async def get_db():

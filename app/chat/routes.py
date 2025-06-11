@@ -40,8 +40,20 @@ async def upload_csv_true_streaming(
             detail="Only CSV files are allowed"
         )
     
+    # 2. Content-Type header check (add this)
+    if file.content_type != 'text/csv':
+        raise HTTPException(status_code=400, detail="Invalid content type. Must be text/csv")
+    
     # 2. TRUE STREAMING SETUP
     max_size = 30 * 1024 * 1024  # 30MB in bytes
+
+    #NOTE : This is a security measure to prevent the user from uploading a file that is too large
+    if file.size and file.size > max_size:
+        raise HTTPException(
+            status_code=400,
+            detail=f"File too large. Maximum size is {max_size//1024//1024}MB"
+        )
+    
     chunk_size = 64 * 1024  # 64KB chunks
     azure_block_size = 4 * 1024 * 1024  # 4MB Azure blocks
     
@@ -182,7 +194,7 @@ async def upload_csv_true_streaming(
         raise
     except Exception as e:
         print(f"❌ Error during streaming: {e}")
-        raise HTTPException(status_code=500, detail="Error during file processing")
+        raise HTTPException(status_code=500, detail="Something went wrong at our end. Don't worry, we will fix it asap.")
     
     # Validate that we got CSV preview
     if csv_preview_data is None:
@@ -267,7 +279,7 @@ async def upload_csv_true_streaming(
             location="upload_csv_mongodb",
             additional_info={"session_id": session_id, "user_email": current_user["email"]}
         )
-        raise HTTPException(status_code=500, detail="Failed to create session in database")
+        raise HTTPException(status_code=500, detail="Something went wrong at our end. Don't worry, we will fix it asap.")
     
     # 4. Return response with smart questions
 
@@ -307,9 +319,10 @@ async def chat_response(
     """
     try:
         #Get the session from the database
-        session = await db["csv_sessions"].find_one({"session_id": session_id})
+        #Add a check to see if the session is owned by the user
+        session = await db["csv_sessions"].find_one({"session_id": session_id, "user_email": current_user["email"]})
         if not session:
-            raise HTTPException(status_code=404, detail="Session not found")
+            raise HTTPException(status_code=404, detail="Session not found or not owned by the user")
         
         #Insert the user query into the database
         await db["messages"].insert_one({
@@ -426,7 +439,7 @@ async def chat_response(
 
     except Exception as e:
         await log_error(e, "chat/routes.py", "chat_response")
-        raise HTTPException(status_code=500, detail="Error during chat response")
+        raise HTTPException(status_code=500, detail="Something went wrong at our end. Don't worry, we will fix it asap.")
 
 @router.post("/feedback")
 async def submit_feedback(
@@ -448,7 +461,7 @@ async def submit_feedback(
         
     except Exception as e:
         await log_error(error=e, location="submit_feedback")
-        raise HTTPException(status_code=500, detail="Error submitting feedback")
+        raise HTTPException(status_code=500, detail="Something went wrong at our end. Don't worry, we will fix it asap.")
 
 @router.post("/chat_summary")
 async def chat_summary(
@@ -523,7 +536,7 @@ async def chat_summary(
 
     except Exception as e:
         await log_error(e, "chat/routes.py", "chat_summary")
-        raise HTTPException(status_code=500, detail="Error during chat summary")
+        raise HTTPException(status_code=500, detail="Something went wrong at our end. Don't worry, we will fix it asap.")
 
         
         

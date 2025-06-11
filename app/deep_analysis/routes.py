@@ -331,7 +331,7 @@ async def deep_analysis(
         
     except Exception as e:
         await log_error(e, "deep_analysis/routes.py", "deep_analysis")
-        raise HTTPException(status_code=500, detail="Error during deep analysis")
+        raise HTTPException(status_code=500, detail="Something went wrong at our end. Don't worry, we will fix it asap.")
     
 
 @router.get("/deep_analysis/status/{session_id}")
@@ -366,6 +366,6 @@ async def get_deep_analysis_status(
         
     except Exception as e:
         await log_error(e, "deep_analysis/routes.py", "get_deep_analysis_status")
-        raise HTTPException(status_code=500, detail="Error fetching deep analysis status")
+        raise HTTPException(status_code=500, detail="Something went wrong at our end. Don't worry, we will fix it asap.")
     
 

@@ -56,7 +56,7 @@ async def get_all_sessions(
         }
     except Exception as e:
         await log_error(error=e, location="get_all_sessions", additional_info={"user_email": current_user.get("email")})
-        raise HTTPException(status_code=500, detail="Internal server error")
+        raise HTTPException(status_code=500, detail="Something went wrong at our end. Don't worry, we will fix it asap.")
     
 @router.get("/get_session_by_id")
 async def get_session_by_id(session_id: str, current_user: dict = Depends(get_current_user), db: Database = Depends(get_db)):
@@ -70,7 +70,7 @@ async def get_session_by_id(session_id: str, current_user: dict = Depends(get_cu
         return {"_id": str(session["_id"]) if "_id" in session else None, **{k: v for k, v in session.items() if k != "_id"}}
     except Exception as e:
         await log_error(error=e, location="get_session_by_id", additional_info={"user_email": current_user.get("email"), "session_id": session_id})
-        raise HTTPException(status_code=500, detail="Internal server error")
+        raise HTTPException(status_code=500, detail="Something went wrong at our end. Don't worry, we will fix it asap.")
 
 @router.delete("/delete_session")
 async def delete_session(session_id: str, current_user: dict = Depends(get_current_user), db: Database = Depends(get_db)):
@@ -96,7 +96,7 @@ async def delete_session(session_id: str, current_user: dict = Depends(get_curre
         return {"message": "Session deleted successfully"}
     except Exception as e:
         await log_error(error=e, location="delete_session", additional_info={"user_email": current_user.get("email"), "session_id": session_id})
-        raise HTTPException(status_code=500, detail="Internal server error")
+        raise HTTPException(status_code=500, detail="Something went wrong at our end. Don't worry, we will fix it asap.")
     
 @router.get("/get_session_messages")
 async def get_session_messages(
@@ -127,4 +127,4 @@ async def get_session_messages(
         return {"messages": formatted_messages, "count": len(formatted_messages)}
     except Exception as e:
         await log_error(error=e, location="get_session_messages", additional_info={"session_id": session_id})
-        raise HTTPException(status_code=500, detail="Internal server error")
+        raise HTTPException(status_code=500, detail="Something went wrong at our end. Don't worry, we will fix it asap.")

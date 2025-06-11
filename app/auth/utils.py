@@ -22,7 +22,7 @@ async def handle_validation_error(request: Request, exc: RequestValidationError)
             "validation_errors": exc.errors()
         }
     )
-    raise HTTPException(status_code=422, detail=str(exc))
+    raise HTTPException(status_code=422, detail="Something went wrong at our end. Don't worry, we will fix it asap.")
 
 async def send_password_email(email: str, password: str) -> bool:
     """

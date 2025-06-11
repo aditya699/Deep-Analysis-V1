@@ -8,6 +8,7 @@ import string
 from app.auth.utils import send_password_email, create_access_token, create_refresh_token
 from app.core.config import settings
 from jose import JWTError, jwt
+import hashlib
 
 router = APIRouter()
 
@@ -25,8 +26,8 @@ async def request_login(
     try:
         email = request.email
 
-        # Generate a random password (6 characters)
-        password = ''.join(random.choices(string.ascii_letters + string.digits, k=6))
+        # Generate a random password (12 characters)
+        password = ''.join(random.choices(string.ascii_letters + string.digits, k=12))
         
         # Set current time and expiry time (72 hours from now)
         current_time = datetime.utcnow()
@@ -44,7 +45,7 @@ async def request_login(
                 {"email": email},
                 {
                     "$set": {
-                        "password": password,
+                        "password": hashlib.sha256(password.encode()).hexdigest(),
                         "password_expiry": password_expiry,
                         "updated_at": current_time
                     }
@@ -54,7 +55,7 @@ async def request_login(
             # Create a new user with password expiry
             new_user = {
                 "email": email,
-                "password": password,
+                "password": hashlib.sha256(password.encode()).hexdigest(),
                 "password_expiry": password_expiry,
                 "created_at": current_time,
                 "updated_at": current_time,
@@ -79,7 +80,7 @@ async def request_login(
             location="request_login",
             additional_info={"email": request.email}
         )
-        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+        raise HTTPException(status_code=500, detail="Something went wrong at our end. Don't worry, we will fix it asap.")
 
 @router.post("/verify-password")
 async def verify_password(
@@ -94,7 +95,7 @@ async def verify_password(
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
 
-        if user["password"] != request.password:
+        if user["password"] != hashlib.sha256(request.password.encode()).hexdigest():
             raise HTTPException(status_code=401, detail="Invalid password")
 
         if datetime.utcnow() > user["password_expiry"]:
@@ -125,7 +126,7 @@ async def verify_password(
 
     except Exception as e:
         await log_error(error=e, location="verify_password", additional_info={"email": request.email})
-        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+        raise HTTPException(status_code=500, detail="Something went wrong at our end. Don't worry, we will fix it asap.")
     
 @router.post("/refresh-token")
 async def refresh_token(request: Request, response: Response):
@@ -172,4 +173,4 @@ async def refresh_token(request: Request, response: Response):
         raise HTTPException(status_code=401, detail="Invalid or expired refresh token")
     except Exception as e:
         await log_error(error=e, location="refresh_token", additional_info={})
-        raise HTTPException(status_code=500, detail="An error occurred")
+        raise HTTPException(status_code=500, detail="Something went wrong at our end. Don't worry, we will fix it asap.")
