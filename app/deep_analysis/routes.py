@@ -22,23 +22,45 @@ from app.chat.utils import download_file_from_container
 from app.deep_analysis.prompts import MANAGER_PROMPT
 from app.deep_analysis.schemas import KPIList, KPIAnalysis
 from app.deep_analysis.report import create_html_report, upload_report_to_blob
-
+from fastapi import BackgroundTasks
 
 router = APIRouter()
 
-@router.post("/deep_analysis")
-async def deep_analysis(
-        session_id: str,
-        current_user: dict = Depends(get_current_user),
-        db: Database = Depends(get_db),
-        container_id: str = Depends(create_new_container),
-        openai_client: OpenAI = Depends(get_openai_client),
-        blob_client: BlobServiceClient = Depends(get_blob_client)
+@router.post("/start")
+async def start_deep_analysis(
+    session_id: str,
+    background_tasks: BackgroundTasks,
+    db: Database = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
 ):
     try:
-        """
-        This endpoint will be main endpoint to control deep analysis.
-        """
+        # Quick validation
+        session_doc = await db["csv_sessions"].find_one({"session_id": session_id})
+        if not session_doc:
+            raise HTTPException(status_code=404, detail="Session not found")
+        
+        # ✅ RESET ANY EXISTING ANALYSIS
+        await db["deep_analysis"].delete_many({"session_id": session_id})
+        
+        # Start background task
+        background_tasks.add_task(run_deep_analysis_background, session_id, current_user)
+        
+        return {"message": "Deep analysis started", "session_id": session_id}
+    
+    except Exception as e:
+        await log_error(e, "deep_analysis/routes.py", "start_deep_analysis")
+        raise HTTPException(status_code=500, detail="Something went wrong at our end. Don't worry, we will fix it asap.")
+
+
+async def run_deep_analysis_background(session_id: str, current_user: dict):
+    """Background function - no Depends() needed"""
+    try:
+        # Get dependencies manually
+        db = await get_db()
+        container_id = await create_new_container()
+        openai_client = await get_openai_client()
+        blob_client = await get_blob_client()
+
         #From the session_id , we need the blob url
         sessions_collection = db["csv_sessions"]
         deep_analysis_collection = db["deep_analysis"]
@@ -97,7 +119,7 @@ async def deep_analysis(
             )
         
         kpi_list = kpi_list_response.output_parsed.kpi_list
-        # kpi_list=kpi_list[:10]
+        kpi_list=kpi_list[:10]
         print(f"Generated KPI List: {kpi_list}")
         
         #Update the session status with the kpi list and their status
@@ -325,16 +347,20 @@ async def deep_analysis(
             sort={"created_at": -1}
         )
 
-        return {
-            "report_url": report_url
-        }
-        
     except Exception as e:
-        await log_error(e, "deep_analysis/routes.py", "deep_analysis")
-        raise HTTPException(status_code=500, detail="Something went wrong at our end. Don't worry, we will fix it asap.")
-    
+        await log_error(e, "deep_analysis/routes.py", "run_deep_analysis_background")
+        # Update status to failed
+        db = await get_db()  # Get db again for error handling
+        await db["deep_analysis"].update_one(
+            {"session_id": session_id},
+            {"$set": {
+                "status": "Deep Analysis Failed", 
+                "error": str(e),
+                "updated_at": datetime.now()
+            }}
+        )
 
-@router.get("/deep_analysis/status/{session_id}")
+@router.get("/status/{session_id}")
 async def get_deep_analysis_status(
     session_id: str,
     current_user: dict = Depends(get_current_user),
