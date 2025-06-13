@@ -48,7 +48,7 @@ async def upload_csv_true_streaming(
     max_size = 30 * 1024 * 1024  # 30MB in bytes
 
     #NOTE : This is a security measure to prevent the user from uploading a file that is too large
-    if file.size and file.size > max_size:
+    if file.size and file.size >= max_size:
         raise HTTPException(
             status_code=400,
             detail=f"File too large. Maximum size is {max_size//1024//1024}MB"
@@ -95,7 +95,7 @@ async def upload_csv_true_streaming(
             print(f"📥 Processing chunk: {len(chunk)} bytes (Total processed: {total_size} bytes)")
             
             # Size check - early exit if too big
-            if total_size > max_size:
+            if total_size >= max_size:
                 print("❌ File too large - stopping stream")
                 raise HTTPException(
                     status_code=400,
