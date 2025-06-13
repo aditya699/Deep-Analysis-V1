@@ -23,6 +23,7 @@ from app.deep_analysis.prompts import MANAGER_PROMPT
 from app.deep_analysis.schemas import KPIList, KPIAnalysis
 from app.deep_analysis.report import create_html_report, upload_report_to_blob
 from fastapi import BackgroundTasks
+from app.deep_analysis.utils import extract_file_id_from_response
 
 router = APIRouter()
 
@@ -169,78 +170,17 @@ async def run_deep_analysis_background(session_id: str, current_user: dict):
                 print(f"KPI Response received for {kpi}")
                 print(f"Response outputs count: {len(kpi_response.output) if kpi_response.output else 0}")
                 
-                # Improved chart extraction logic
+                # Extract chart file ID using utility function
+                chart_file_id = await extract_file_id_from_response(kpi_response, openai_client)
                 chart_url = None
-                chart_file_id = None
                 
-                # Try to extract chart, but don't fail if it doesn't work
-                try:
-                    for i, output in enumerate(kpi_response.output):
-                        print(f"Processing output {i}: type={type(output)}")
-                        
-                        # Check if this is a message output with content and annotations
-                        if hasattr(output, 'content') and output.content:
-                            for j, content in enumerate(output.content):
-                                print(f"  Content {j}: type={type(content)}, hasAnnotations={hasattr(content, 'annotations')}")
-                                
-                                if hasattr(content, 'annotations') and content.annotations:
-                                    print(f"    Found {len(content.annotations)} annotations")
-                                    for k, annotation in enumerate(content.annotations):
-                                        print(f"    Annotation {k}: type={getattr(annotation, 'type', 'no_type')}")
-                                        
-                                        if (hasattr(annotation, 'type') and 
-                                            annotation.type == 'container_file_citation' and
-                                            hasattr(annotation, 'file_id')):
-                                            chart_file_id = annotation.file_id
-                                            print(f"Found chart file ID: {chart_file_id}")
-                                            break
-                                            
-                                    if chart_file_id:
-                                        break
-                            if chart_file_id:
-                                break
-                        
-                        # Check if this is a code interpreter tool call with outputs
-                        elif hasattr(output, 'type') and output.type == 'code_interpreter_call':
-                            print(f"  Found code interpreter call")
-                            if hasattr(output, 'outputs') and output.outputs:
-                                print(f"    Has {len(output.outputs)} outputs")
-                                for tool_output in output.outputs:
-                                    if (hasattr(tool_output, 'type') and 
-                                        tool_output.type == 'image' and
-                                        hasattr(tool_output, 'image') and
-                                        hasattr(tool_output.image, 'file_id')):
-                                        chart_file_id = tool_output.image.file_id
-                                        print(f"Found chart file ID from tool output: {chart_file_id}")
-                                        break
-                                if chart_file_id:
-                                    break
-                        
-                        # Additional check for response code interpreter tool call structure
-                        elif hasattr(output, '__class__') and 'CodeInterpreter' in str(output.__class__):
-                            print(f"  Found ResponseCodeInterpreterToolCall")
-                            # Sometimes the file citation is in the response structure differently
-                            if hasattr(output, 'results') and output.results:
-                                for result in output.results:
-                                    if hasattr(result, 'type') and result.type == 'image':
-                                        if hasattr(result, 'image') and hasattr(result.image, 'file_id'):
-                                            chart_file_id = result.image.file_id
-                                            print(f"Found chart file ID from results: {chart_file_id}")
-                                            break
-                                if chart_file_id:
-                                    break
-
-                    # Download the chart if file ID was found
-                    if chart_file_id:
-                        print(f"Attempting to download chart with file ID: {chart_file_id}")
-                        chart_url = await download_file_from_container(chart_file_id, container_id, blob_client)
-                        print(f"Chart URL successfully extracted: {chart_url}")
-                    else:
-                        print(f"No chart file found in response for KPI: {kpi}")
-                        
-                except Exception as e:
-                    print(f"Error extracting chart for KPI {kpi}: {str(e)}")
-                    chart_url = None  # Chart extraction failed but we continue
+                # Download the chart if file ID was found
+                if chart_file_id:
+                    print(f"Attempting to download chart with file ID: {chart_file_id}")
+                    chart_url = await download_file_from_container(chart_file_id, container_id, blob_client)
+                    print(f"Chart URL successfully extracted: {chart_url}")
+                else:
+                    print(f"No chart file found in response for KPI: {kpi}")
 
                 #Pass the response for another openai call to get the analysis
                 analysis_prompt = f"""

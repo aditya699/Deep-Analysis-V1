@@ -14,3 +14,6 @@ class KPIAnalysis(BaseModel):
     code: str
     code_explanation: str
     analysis_steps: str
+
+class FileIDResponse(BaseModel):
+    file_id: str
