@@ -115,11 +115,12 @@ async def run_deep_analysis_background(session_id: str, current_user: dict):
         kpi_list_response = await openai_client.responses.parse(
                 model="gpt-4.1-mini",
                 input=prompt_kpi_list,
-                text_format=KPIList
+                text_format=KPIList,
+                timeout=300
             )
         
         kpi_list = kpi_list_response.output_parsed.kpi_list
-        kpi_list=kpi_list[:10]
+        kpi_list=kpi_list[:5]
         print(f"Generated KPI List: {kpi_list}")
         
         #Update the session status with the kpi list and their status
@@ -134,170 +135,188 @@ async def run_deep_analysis_background(session_id: str, current_user: dict):
         )
 
         for kpi in kpi_list:
-            print(f"Analyzing KPI: {kpi}")
-            
-            #Generate prompt for the kpi with explicit chart creation instruction
-            prompt_kpi = f"""
-            You are a data analyst tasked with analyzing a specific KPI from a dataset.
-            
-            Your task:
-            1. Analyze the KPI: {kpi}
-            2. Use the dataset located at: {file_path}
-            3. Sample data preview: {csv_info}
-            
-            Instructions:
-            - Provide detailed insights about this KPI
-            - ALWAYS create and save a visualization chart for this KPI using matplotlib or seaborn
-            - Make sure to use plt.show() to display and save the chart
-            - Explain your findings in business terms
-            - The chart must be generated as part of your analysis
-            
-            CRITICAL: You must create a visual chart/graph for this KPI analysis.
-            """
-            
-            #Generate response for the kpi with code interpreter
-            kpi_response = await openai_client.responses.create(
-                model="gpt-4.1-mini",
-                tools=[{"type": "code_interpreter", "container": container_id}],
-                tool_choice="required",
-                input=prompt_kpi
-            )
-            
-            print(f"KPI Response received for {kpi}")
-            print(f"Response outputs count: {len(kpi_response.output) if kpi_response.output else 0}")
-            
-            # Improved chart extraction logic
-            chart_url = None
-            chart_file_id = None
-            
             try:
-                for i, output in enumerate(kpi_response.output):
-                    print(f"Processing output {i}: type={type(output)}")
-                    
-                    # Check if this is a message output with content and annotations
-                    if hasattr(output, 'content') and output.content:
-                        for j, content in enumerate(output.content):
-                            print(f"  Content {j}: type={type(content)}, hasAnnotations={hasattr(content, 'annotations')}")
-                            
-                            if hasattr(content, 'annotations') and content.annotations:
-                                print(f"    Found {len(content.annotations)} annotations")
-                                for k, annotation in enumerate(content.annotations):
-                                    print(f"    Annotation {k}: type={getattr(annotation, 'type', 'no_type')}")
-                                    
-                                    if (hasattr(annotation, 'type') and 
-                                        annotation.type == 'container_file_citation' and
-                                        hasattr(annotation, 'file_id')):
-                                        chart_file_id = annotation.file_id
-                                        print(f"Found chart file ID: {chart_file_id}")
-                                        break
+                print(f"Analyzing KPI: {kpi}")
+                
+                #Generate prompt for the kpi with explicit chart creation instruction
+                prompt_kpi = f"""
+                You are a data analyst tasked with analyzing a specific KPI from a dataset.
+                
+                Your task:
+                1. Analyze the KPI: {kpi}
+                2. Use the dataset located at: {file_path}
+                3. Sample data preview: {csv_info}
+                
+                Instructions:
+                - Provide detailed insights about this KPI
+                - ALWAYS create and save a visualization chart for this KPI using matplotlib or seaborn
+                - Make sure to use plt.show() to display and save the chart
+                - Explain your findings in business terms
+                - The chart must be generated as part of your analysis
+                
+                CRITICAL: You must create a visual chart/graph for this KPI analysis.
+                """
+                
+                #Generate response for the kpi with code interpreter
+                kpi_response = await openai_client.responses.create(
+                    model="gpt-4.1-mini",
+                    tools=[{"type": "code_interpreter", "container": container_id}],
+                    tool_choice="required",
+                    input=prompt_kpi,
+                    timeout=300
+                )
+                
+                print(f"KPI Response received for {kpi}")
+                print(f"Response outputs count: {len(kpi_response.output) if kpi_response.output else 0}")
+                
+                # Improved chart extraction logic
+                chart_url = None
+                chart_file_id = None
+                
+                # Try to extract chart, but don't fail if it doesn't work
+                try:
+                    for i, output in enumerate(kpi_response.output):
+                        print(f"Processing output {i}: type={type(output)}")
+                        
+                        # Check if this is a message output with content and annotations
+                        if hasattr(output, 'content') and output.content:
+                            for j, content in enumerate(output.content):
+                                print(f"  Content {j}: type={type(content)}, hasAnnotations={hasattr(content, 'annotations')}")
+                                
+                                if hasattr(content, 'annotations') and content.annotations:
+                                    print(f"    Found {len(content.annotations)} annotations")
+                                    for k, annotation in enumerate(content.annotations):
+                                        print(f"    Annotation {k}: type={getattr(annotation, 'type', 'no_type')}")
                                         
+                                        if (hasattr(annotation, 'type') and 
+                                            annotation.type == 'container_file_citation' and
+                                            hasattr(annotation, 'file_id')):
+                                            chart_file_id = annotation.file_id
+                                            print(f"Found chart file ID: {chart_file_id}")
+                                            break
+                                            
+                                    if chart_file_id:
+                                        break
+                            if chart_file_id:
+                                break
+                        
+                        # Check if this is a code interpreter tool call with outputs
+                        elif hasattr(output, 'type') and output.type == 'code_interpreter_call':
+                            print(f"  Found code interpreter call")
+                            if hasattr(output, 'outputs') and output.outputs:
+                                print(f"    Has {len(output.outputs)} outputs")
+                                for tool_output in output.outputs:
+                                    if (hasattr(tool_output, 'type') and 
+                                        tool_output.type == 'image' and
+                                        hasattr(tool_output, 'image') and
+                                        hasattr(tool_output.image, 'file_id')):
+                                        chart_file_id = tool_output.image.file_id
+                                        print(f"Found chart file ID from tool output: {chart_file_id}")
+                                        break
                                 if chart_file_id:
                                     break
-                        if chart_file_id:
-                            break
-                    
-                    # Check if this is a code interpreter tool call with outputs
-                    elif hasattr(output, 'type') and output.type == 'code_interpreter_call':
-                        print(f"  Found code interpreter call")
-                        if hasattr(output, 'outputs') and output.outputs:
-                            print(f"    Has {len(output.outputs)} outputs")
-                            for tool_output in output.outputs:
-                                if (hasattr(tool_output, 'type') and 
-                                    tool_output.type == 'image' and
-                                    hasattr(tool_output, 'image') and
-                                    hasattr(tool_output.image, 'file_id')):
-                                    chart_file_id = tool_output.image.file_id
-                                    print(f"Found chart file ID from tool output: {chart_file_id}")
+                        
+                        # Additional check for response code interpreter tool call structure
+                        elif hasattr(output, '__class__') and 'CodeInterpreter' in str(output.__class__):
+                            print(f"  Found ResponseCodeInterpreterToolCall")
+                            # Sometimes the file citation is in the response structure differently
+                            if hasattr(output, 'results') and output.results:
+                                for result in output.results:
+                                    if hasattr(result, 'type') and result.type == 'image':
+                                        if hasattr(result, 'image') and hasattr(result.image, 'file_id'):
+                                            chart_file_id = result.image.file_id
+                                            print(f"Found chart file ID from results: {chart_file_id}")
+                                            break
+                                if chart_file_id:
                                     break
-                            if chart_file_id:
-                                break
-                    
-                    # Additional check for response code interpreter tool call structure
-                    elif hasattr(output, '__class__') and 'CodeInterpreter' in str(output.__class__):
-                        print(f"  Found ResponseCodeInterpreterToolCall")
-                        # Sometimes the file citation is in the response structure differently
-                        if hasattr(output, 'results') and output.results:
-                            for result in output.results:
-                                if hasattr(result, 'type') and result.type == 'image':
-                                    if hasattr(result, 'image') and hasattr(result.image, 'file_id'):
-                                        chart_file_id = result.image.file_id
-                                        print(f"Found chart file ID from results: {chart_file_id}")
-                                        break
-                            if chart_file_id:
-                                break
 
-                # Download the chart if file ID was found
-                if chart_file_id:
-                    print(f"Attempting to download chart with file ID: {chart_file_id}")
-                    chart_url = await download_file_from_container(chart_file_id, container_id, blob_client)
-                    print(f"Chart URL successfully extracted: {chart_url}")
+                    # Download the chart if file ID was found
+                    if chart_file_id:
+                        print(f"Attempting to download chart with file ID: {chart_file_id}")
+                        chart_url = await download_file_from_container(chart_file_id, container_id, blob_client)
+                        print(f"Chart URL successfully extracted: {chart_url}")
+                    else:
+                        print(f"No chart file found in response for KPI: {kpi}")
+                        
+                except Exception as e:
+                    print(f"Error extracting chart for KPI {kpi}: {str(e)}")
+                    chart_url = None  # Chart extraction failed but we continue
+
+                #Pass the response for another openai call to get the analysis
+                analysis_prompt = f"""
+                You are an analyst who needs to make sense of work done by another analyst.
+                For the analysis you need to extract:
+
+                1. Business insights
+                2. Code
+                3. Code explanation in a paragraph
+                4. How did agent compute the KPI in a paragraph
+
+                Response: {str(kpi_response)}
+                """
+                
+                # Prepare input content - only include image if chart_url is available
+                input_content = [{"type": "input_text", "text": analysis_prompt}]
+                if chart_url:
+                    print(f"Including chart in analysis for KPI: {kpi}")
+                    input_content.append({
+                        "type": "input_image",
+                        "image_url": chart_url,
+                    })
                 else:
-                    print(f"No chart file found in response for KPI: {kpi}")
+                    print(f"No chart to include in analysis for KPI: {kpi}")
+                
+                analysis_response = await openai_client.responses.parse(
+                    model="gpt-4.1-mini",
+                    input=[{
+                        "role": "user",
+                        "content": input_content,
+                    }],
+                    text_format=KPIAnalysis,
+                    timeout=300
+                )
+                
+                #Create KPI analysis object
+                kpi_analysis = {
+                    "kpi_name": kpi,
+                    "business_analysis": analysis_response.output_parsed.business_analysis,
+                    "code": analysis_response.output_parsed.code,
+                    "code_explanation": analysis_response.output_parsed.code_explanation,
+                    "chart_url": chart_url,
+                    "analysis_steps": analysis_response.output_parsed.analysis_steps,
+                    "created_at": datetime.now(),
+                    "updated_at": datetime.now()
+                }
+                
+                print(f"KPI analysis completed for {kpi}. Chart URL: {chart_url}")
+                
+                #Update the session status with the latest KPI analysis and mark it as complete
+                await deep_analysis_collection.update_one(
+                    {"session_id": session_id},
+                    {"$push": {
+                        "kpi_analyses": kpi_analysis
+                    },
+                    "$set": {
+                        f"kpi_status.{kpi}": 1,  # Mark this KPI as analyzed
+                        "status": f"Deep Analysis - Analyzing KPI: {kpi}",
+                        "updated_at": datetime.now()
+                    }},
+                    sort={"created_at": -1}
+                )
                     
             except Exception as e:
-                print(f"Error extracting chart for KPI {kpi}: {str(e)}")
-                chart_url = None
-
-            #Pass the response for another openai call to get the analysis
-            analysis_prompt = f"""
-            You are an analyst who needs to make sense of work done by another analyst.
-            For the analysis you need to extract:
-
-            1. Business insights
-            2. Code
-            3. Code explanation in a paragraph
-            4. How did agent compute the KPI in a paragraph
-
-            Response: {str(kpi_response)}
-            """
-            
-            # Prepare input content - only include image if chart_url is available
-            input_content = [{"type": "input_text", "text": analysis_prompt}]
-            if chart_url:
-                print(f"Including chart in analysis for KPI: {kpi}")
-                input_content.append({
-                    "type": "input_image",
-                    "image_url": chart_url,
-                })
-            else:
-                print(f"No chart to include in analysis for KPI: {kpi}")
-            
-            analysis_response = await openai_client.responses.parse(
-                model="gpt-4.1-mini",
-                input=[{
-                    "role": "user",
-                    "content": input_content,
-                }],
-                text_format=KPIAnalysis
-            )
-            
-            #Create KPI analysis object
-            kpi_analysis = {
-                "kpi_name": kpi,
-                "business_analysis": analysis_response.output_parsed.business_analysis,
-                "code": analysis_response.output_parsed.code,
-                "code_explanation": analysis_response.output_parsed.code_explanation,
-                "chart_url": chart_url,
-                "analysis_steps": analysis_response.output_parsed.analysis_steps,
-                "created_at": datetime.now(),
-                "updated_at": datetime.now()
-            }
-            
-            print(f"KPI analysis completed for {kpi}. Chart URL: {chart_url}")
-            
-            #Update the session status with the latest KPI analysis and mark it as complete
-            await deep_analysis_collection.update_one(
-                {"session_id": session_id},
-                {"$push": {
-                    "kpi_analyses": kpi_analysis
-                },
-                "$set": {
-                    f"kpi_status.{kpi}": 1,  # Mark this KPI as analyzed
-                    "status": f"Deep Analysis - Analyzing KPI: {kpi}",
-                    "updated_at": datetime.now()
-                }},
-                sort={"created_at": -1}
-            )
+                print(f"Error processing KPI {kpi}: {str(e)}")
+                # Update database to mark this KPI as failed
+                await deep_analysis_collection.update_one(
+                    {"session_id": session_id},
+                    {"$set": {
+                        f"kpi_status.{kpi}": -1,  # Mark this KPI as failed
+                        "status": f"Deep Analysis - KPI {kpi} Failed",
+                        "updated_at": datetime.now()
+                    }},
+                    sort={"created_at": -1}
+                )
+                continue
 
         #Get all the kpi analyses after processing all KPIs
         session_data = await deep_analysis_collection.find_one({"session_id": session_id})
@@ -314,7 +333,8 @@ async def run_deep_analysis_background(session_id: str, current_user: dict):
         
         summary_response = await openai_client.responses.create(
             model="gpt-4.1-mini",
-            input=summary_prompt
+            input=summary_prompt,
+            timeout=300
         )
         
         summary = summary_response.output_text

@@ -339,12 +339,28 @@ async def create_html_report(session_id: str) -> str:
             background: white;
             border-radius: 0.5rem;
             box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-ai);
         }
         
         .stat-number {
             font-size: 2rem;
             font-weight: 700;
             color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
         
         .stat-label {
@@ -352,6 +368,85 @@ async def create_html_report(session_id: str) -> str:
             font-size: 0.875rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            margin-top: 0.5rem;
+        }
+        
+        /* Success Rate Stat */
+        .success-rate {
+            position: relative;
+        }
+        
+        .success-rate .stat-number {
+            color: var(--success);
+        }
+        
+        .success-rate::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient-success);
+            transform-origin: left;
+            animation: successFill 1s ease-out forwards;
+        }
+        
+        @keyframes successFill {
+            from { transform: scaleX(0); }
+            to { transform: scaleX(1); }
+        }
+        
+        /* Failure Rate Stat */
+        .failure-rate {
+            position: relative;
+        }
+        
+        .failure-rate .stat-number {
+            color: var(--error);
+        }
+        
+        .failure-rate::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--error) 0%, #dc2626 100%);
+            transform-origin: left;
+            animation: failureFill 1s ease-out forwards;
+        }
+        
+        @keyframes failureFill {
+            from { transform: scaleX(0); }
+            to { transform: scaleX(1); }
+        }
+        
+        /* Pending Rate Stat */
+        .pending-rate {
+            position: relative;
+        }
+        
+        .pending-rate .stat-number {
+            color: var(--warning);
+        }
+        
+        .pending-rate::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--warning) 0%, #d97706 100%);
+            transform-origin: left;
+            animation: pendingFill 1s ease-out forwards;
+        }
+        
+        @keyframes pendingFill {
+            from { transform: scaleX(0); }
+            to { transform: scaleX(1); }
         }
         
         /* Enhanced KPI Cards with AI Feel */
@@ -737,6 +832,71 @@ async def create_html_report(session_id: str) -> str:
         .kpi-card:nth-child(3) { animation-delay: 0.3s; }
         .kpi-card:nth-child(4) { animation-delay: 0.4s; }
         .kpi-card:nth-child(5) { animation-delay: 0.5s; }
+        
+        /* KPI Status Styles */
+        .status-badge {
+            font-size: 0.875rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            margin-left: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .status-success .status-badge {
+            background: var(--gradient-success);
+            color: white;
+        }
+        
+        .status-failed .status-badge {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+        
+        .status-pending .status-badge {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+        }
+        
+        /* Error Message Styles */
+        .error-message {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-left: 4px solid var(--error);
+            padding: 2rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .error-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        /* KPI Card Status Styles */
+        .kpi-card.status-failed {
+            border: 1px solid var(--error);
+            background: linear-gradient(135deg, rgba(254, 242, 242, 0.95) 0%, rgba(254, 202, 202, 0.95) 100%);
+        }
+        
+        .kpi-card.status-pending {
+            border: 1px solid var(--warning);
+            background: linear-gradient(135deg, rgba(255, 247, 237, 0.95) 0%, rgba(255, 237, 213, 0.95) 100%);
+        }
+        
+        .kpi-card.status-success {
+            border: 1px solid var(--success);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+        }
     """
     
     # Start building HTML
@@ -782,13 +942,17 @@ async def create_html_report(session_id: str) -> str:
                                 <div class="stat-number">{len(kpi_analyses)}</div>
                                 <div class="stat-label">KPIs Analyzed</div>
                             </div>
-                            <div class="stat-item">
-                                <div class="stat-number">100%</div>
-                                <div class="stat-label">Analysis Complete</div>
+                            <div class="stat-item success-rate">
+                                <div class="stat-number">
+                                    {sum(1 for kpi in analysis_doc.get("kpi_status", {}).values() if kpi == 1)}
+                                </div>
+                                <div class="stat-label">Successful KPIs</div>
                             </div>
-                            <div class="stat-item">
-                                <div class="stat-number">AI</div>
-                                <div class="stat-label">Powered Analysis</div>
+                            <div class="stat-item failure-rate">
+                                <div class="stat-number">
+                                    {sum(1 for kpi in analysis_doc.get("kpi_status", {}).values() if kpi == -1)}
+                                </div>
+                                <div class="stat-label">Failed KPIs</div>
                             </div>
                         </div>
                     </div>
@@ -815,26 +979,39 @@ async def create_html_report(session_id: str) -> str:
         chart_url = analysis.get("chart_url", "")
         analysis_steps = analysis.get("analysis_steps", "No analysis steps available")
         
+        # Get KPI status from the database
+        kpi_status = analysis_doc.get("kpi_status", {}).get(kpi_name, 0)
+        
         # Convert markdown content to HTML for proper formatting
         business_analysis_html = markdown_to_html(business_analysis)
         code_explanation_html = markdown_to_html(code_explanation)
         
+        # Determine status class and message
+        status_class = "status-success" if kpi_status == 1 else "status-failed" if kpi_status == -1 else "status-pending"
+        status_message = "Analysis Complete" if kpi_status == 1 else "Analysis Failed" if kpi_status == -1 else "Analysis Pending"
+        status_icon = "✅" if kpi_status == 1 else "❌" if kpi_status == -1 else "⏳"
+        
         html_content += f"""
-                    <div class="kpi-card">
+                    <div class="kpi-card {status_class}">
                         <div class="kpi-header">
-                            <h3>{kpi_name}</h3>
+                            <h3>{kpi_name} <span class="status-badge">{status_icon} {status_message}</span></h3>
                         </div>
                         <div class="kpi-content">
-                            <!-- Chart -->
-                            <div class="chart-container">
         """
         
-        if chart_url:
-            html_content += f'<img src="{chart_url}" alt="Chart for {kpi_name}" loading="lazy">'
-        else:
-            html_content += '<div class="no-chart">📊 No visualization available</div>'
-        
-        html_content += f"""
+        # Only show content if KPI was successful
+        if kpi_status == 1:
+            html_content += f"""
+                            <!-- Chart -->
+                            <div class="chart-container">
+            """
+            
+            if chart_url:
+                html_content += f'<img src="{chart_url}" alt="Chart for {kpi_name}" loading="lazy">'
+            else:
+                html_content += '<div class="no-chart">📊 No visualization available</div>'
+            
+            html_content += f"""
                             </div>
                             
                             <!-- Business Analysis -->
@@ -868,30 +1045,42 @@ async def create_html_report(session_id: str) -> str:
                             <div class="content-section">
                                 <h4>🔍 Analysis Steps</h4>
                                 <div class="steps-section">
-        """
-        
-        # Handle analysis steps - could be string or list
-        if isinstance(analysis_steps, str):
-            # If it's a string, split by numbered points or newlines
-            steps = [step.strip() for step in analysis_steps.split('\n') if step.strip()]
-            html_content += '<ol class="steps-list">'
-            for step in steps:
-                # Remove leading numbers if present
-                clean_step = re.sub(r'^\d+\.\s*', '', step)
-                if clean_step:
-                    html_content += f'<li>{clean_step}</li>'
-            html_content += '</ol>'
-        elif isinstance(analysis_steps, list):
-            html_content += '<ol class="steps-list">'
-            for step in analysis_steps:
-                html_content += f'<li>{step}</li>'
-            html_content += '</ol>'
-        else:
-            html_content += f'<p>{analysis_steps}</p>'
-        
-        html_content += """
+            """
+            
+            # Handle analysis steps - could be string or list
+            if isinstance(analysis_steps, str):
+                # If it's a string, split by numbered points or newlines
+                steps = [step.strip() for step in analysis_steps.split('\n') if step.strip()]
+                html_content += '<ol class="steps-list">'
+                for step in steps:
+                    # Remove leading numbers if present
+                    clean_step = re.sub(r'^\d+\.\s*', '', step)
+                    if clean_step:
+                        html_content += f'<li>{clean_step}</li>'
+                html_content += '</ol>'
+            elif isinstance(analysis_steps, list):
+                html_content += '<ol class="steps-list">'
+                for step in analysis_steps:
+                    html_content += f'<li>{step}</li>'
+                html_content += '</ol>'
+            else:
+                html_content += f'<p>{analysis_steps}</p>'
+            
+            html_content += """
                                 </div>
                             </div>
+            """
+        else:
+            # Show error message for failed KPIs
+            error_message = "This KPI analysis failed to complete. Please try again or contact support if the issue persists."
+            html_content += f"""
+                            <div class="error-message">
+                                <div class="error-icon">⚠️</div>
+                                <p>{error_message}</p>
+                            </div>
+            """
+        
+        html_content += """
                         </div>
                     </div>
         """

@@ -375,7 +375,8 @@ async def chat_response(
             model="gpt-4.1-mini",
             tools=[{"type": "code_interpreter", "container": container_id}],
             tool_choice="auto",
-            input=prompt
+            input=prompt,
+            timeout=300
         )
         print(response)
 
@@ -394,7 +395,8 @@ async def chat_response(
                 code_explain=await openai_client.responses.create(
                                     model="gpt-4.1-mini",
                                     input=f"Explain what the following code is doing so that the business user can understand it. Format your explanation as a numbered list where each step starts with 'This code does:' followed by the action. For example: '1. This code does: Loads the data from the CSV file' : {code_content if code_content else None}.If no code is present, just say 'No code was generated'",
-                                    instructions="You are a helpful assistant that can explain code to business users. You should explain the code in a way that is easy to understand."
+                                    instructions="You are a helpful assistant that can explain code to business users. You should explain the code in a way that is easy to understand.",
+                                    timeout=300
                                 )
             
             if hasattr(output, 'content'):
@@ -512,7 +514,8 @@ async def chat_summary(
         response = await openai_client.responses.create(
             model="gpt-4.1-mini",
             input=prompt,
-            instructions="You are a helpful assistant that can summarize the chat history for the user. You should summarize the chat history in a way that is easy to understand."
+            instructions="You are a helpful assistant that can summarize the chat history for the user. You should summarize the chat history in a way that is easy to understand.",
+            timeout=300
         )
 
         # Create summary document for database
