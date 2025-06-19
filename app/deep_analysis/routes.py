@@ -121,7 +121,7 @@ async def run_deep_analysis_background(session_id: str, current_user: dict):
             )
         
         kpi_list = kpi_list_response.output_parsed.kpi_list
-        kpi_list=kpi_list[:5]
+        kpi_list=kpi_list[:3]
         print(f"Generated KPI List: {kpi_list}")
         
         #Update the session status with the kpi list and their status
